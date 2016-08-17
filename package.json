@@ -2,7 +2,7 @@
   "name": "iddeal-trello-burndown",
   "version": "0.0.1",
   "description": "A burndown for Iddeal Concepts Inc. Version 9",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/brycekbargar/iddeal-trello-burndown/issues"
   },
-  "homepage": "https://github.com/brycekbargar/iddeal-trello-burndown#readme"
+  "homepage": "https://github.com/brycekbargar/iddeal-trello-burndown#readme",
+  "dependencies": {
+    "restify": "^4.1.1"
+  }
 }
