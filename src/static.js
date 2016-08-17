@@ -1,7 +1,7 @@
 const restify = require('restify');
 
 module.exports = (server) =>
-  server.get(/\/?.*/, restify.serveStatic({
+    server.get(/^(?!\/api)\/?.*/, restify.serveStatic({
     directory: './src/static',
     default: 'index.html'
   }));

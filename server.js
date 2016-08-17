@@ -4,8 +4,6 @@ const static = require('./src/static.js');
 
 const server = restify.createServer();
 
-// The static assets are routed from the root url
-// We need to register the more specific api routes first
 api(server);
 static(server);
 
