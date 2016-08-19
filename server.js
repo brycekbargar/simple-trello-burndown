@@ -1,11 +1,6 @@
-const restify = require('restify');
-const api = require('./src/api.js');
-const static = require('./src/static.js');
+const server = require('./src/server.js');
 
-const server = restify.createServer();
-
-api(server);
-static(server);
+console.log(server.router.mounts);
 
 const port = process.env.PORT || 80;
 
