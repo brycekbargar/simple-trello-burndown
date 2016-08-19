@@ -1,13 +1,8 @@
-const restify = require('restify');
-const helloController = require('./api/helloController.js');
+const helloController = require('./api/controllers/helloController.js');
 
 module.exports = (server) => {
-  server.get({
-    path: '/api/hello/:name',
-    docString: 
-`Multiple Lines
-of documentation`
-  }, helloController.get);
-  server.head('/api/hello/:name', helloController.get);
+  let handle = require('./api/utils/handlerGenerator.js')(server);
+
+  handle('get', '/api/hello/:name', helloController);
 };
 

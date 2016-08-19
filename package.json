@@ -20,5 +20,9 @@
   "homepage": "https://github.com/brycekbargar/iddeal-trello-burndown#readme",
   "dependencies": {
     "restify": "^4.1.1"
+  },
+  "devDependencies": {
+    "cli-table2": "^0.2.0",
+    "docstring": "^1.1.0"
   }
 }
