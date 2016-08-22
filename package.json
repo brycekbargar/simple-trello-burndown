@@ -1,28 +1,33 @@
 {
-  "name": "iddeal-trello-burndown",
+  "name": "simple-trello-burndown",
   "version": "0.0.1",
-  "description": "A burndown for Iddeal Concepts Inc. Version 9",
+  "description": "A simple framework for creating a burndown of Trello tags",
+  "main": "index.js",
   "engines": {
     "node": "6.4.0"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brycekbargar/iddeal-trello-burndown.git"
+    "url": "git+https://github.com/brycekbargar/simple-trello-burndown.git"
   },
   "author": "bryce",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brycekbargar/iddeal-trello-burndown/issues"
+    "url": "https://github.com/brycekbargar/simple-trello-burndown/issues"
   },
-  "homepage": "https://github.com/brycekbargar/iddeal-trello-burndown#readme",
+  "homepage": "https://github.com/brycekbargar/simple-trello-burndown#readme",
   "dependencies": {
-    "restify": "^4.1.1"
+    "restify": "^4.0.2",
+    "swagger-restify-mw": "^0.1.0"
   },
   "devDependencies": {
-    "cli-table2": "^0.2.0",
-    "docstring": "^1.1.0"
+    "should": "^7.1.0",
+    "supertest": "^1.0.0",
+    "swagger": "^0.7.5"
+  },
+  "scripts": {
+    "test": "swagger project test",
+    "start": "swagger project start",
+    "swagger": "swagger"
   }
 }
