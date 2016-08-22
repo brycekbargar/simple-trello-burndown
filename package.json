@@ -25,15 +25,20 @@
     "eslint": "^3.3.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
+    "npm-watch": "^0.1.6",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
     "swagger": "^0.7.5"
   },
+  "watch": {
+    "test": "{api, test}/*.js"
+  },
   "scripts": {
     "test": "eslint ./ && istanbul cover _mocha",
     "start": "swagger project start",
     "swagger": "swagger",
-    "heroku-prebuild": "npm install swagger"
+    "heroku-prebuild": "npm install swagger",
+    "watch": "npm-watch"
   }
 }

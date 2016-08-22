@@ -1,2 +1,3 @@
 test --recursive
 --reporter spec
+--colors
