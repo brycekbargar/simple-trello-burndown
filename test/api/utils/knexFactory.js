@@ -5,7 +5,7 @@ module.exports = (debug) => {
     client: 'sqlite3',
     connection: ':memory:',
     migrations: {
-      directory: './db/migrations',
+      directory: './migrations',
       tableName: 'knex_migrations'
     },
     useNullAsDefault: true,

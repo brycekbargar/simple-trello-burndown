@@ -1,2 +1,2 @@
-# iddeal-trello-burndown
-A burndown for Iddeal Concepts Inc. Version 9
+# simple-trello-burndown
+A simple tag-based burndown for Trello

@@ -3,7 +3,7 @@ swagger: '2.0'
 info:
   version: "0.0.1"
   title: Iddeal Trello Burndown
-basePath: /
+basePath: /api/
 schemes:
   - http
   - https
