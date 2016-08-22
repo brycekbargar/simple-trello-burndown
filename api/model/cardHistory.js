@@ -1,12 +1,21 @@
 'use strict';
+const knex = require('knex');
 
 function CardHistory(data) {
-  this.data = data;
+  this.cardNo = data.cardNo;
+  this.listId = data.listId;
 }
 
-CardHistory.bulkCreate = function(cardHistories) {
-  this.cardHistories = cardHistories;
-};
+CardHistory.bulkCreate = cardHistories =>
+  knex.transaction(tx => 
+    Promise.all(
+      cardHistories
+        .map(ch => tx
+          .insert({
+            card_no: ch.cardNo,
+            list_id: ch.listId
+          })
+          .into('card_histories'))));
 
 CardHistory.list = function() {
   return [];

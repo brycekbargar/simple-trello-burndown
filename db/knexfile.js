@@ -1,16 +1,5 @@
 module.exports = {
 
-  test: {
-    client: 'sqlite3',
-    connection: {
-      filename: './test.sqlite3'
-    },
-    migrations: {
-      directory: './migrations',
-      tableName: 'knex_migrations'
-    }
-  },
-
   development: {
     client: 'mariasql',
     connection: {
