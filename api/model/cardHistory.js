@@ -8,4 +8,8 @@ CardHistory.bulkCreate = function(cardHistories) {
   this.cardHistories = cardHistories;
 };
 
+CardHistory.list = function() {
+  return [];
+};
+
 module.exports = CardHistory;

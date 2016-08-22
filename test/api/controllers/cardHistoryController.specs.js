@@ -51,4 +51,33 @@ describe('For the CardHistoryController expect', () => {
       expect(this.resSpy).to.have.been.calledWith(204);
     });
   });
+  describe('/get', () => {
+    beforeEach('setup spies', () => {
+      this.resSpy = spy();
+      this.listSpy = stub(CardHistory, 'list');
+      this.listSpy.returns(
+        this.cardHistories = [
+          { date: '4/1/2016', status: 'backlog' },
+          { date: '4/2/2016', status: 'backlog' },
+          { date: '4/3/2016', status: 'dev' },
+          { date: '4/4/2016', status: 'dev' },
+          { date: '4/5/2016', status: 'qa' },
+          { date: '4/6/2016', status: 'done' },
+        ]);
+      proxyquireStubs['./../model/cardHistory.js'] = CardHistory;
+    });
+    beforeEach('make call', () => {
+      proxyquire('./../../../api/controllers/cardHistoryController.js', proxyquireStubs)
+        .get({}, { send: this.resSpy });
+    });
+    afterEach('teardown spies', () => {
+      this.listSpy.restore();
+    });
+    it('to delegate it to the model', () => {
+      expect(this.listSpy).to.have.been.calledOnce;
+    });
+    it('to return the histories', () => {
+      expect(this.resSpy).to.have.been.calledWith(200, this.cardHistories);
+    });
+  });
 });

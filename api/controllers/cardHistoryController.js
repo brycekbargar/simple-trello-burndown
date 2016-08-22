@@ -9,7 +9,7 @@ function post(req, res) {
 }
 
 function get(req, res) {
-  res.send([]);
+  res.send(200, CardHistory.list());
 }
 
 function orphans(req, res) {
