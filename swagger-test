@@ -1,2 +1,0 @@
-mkdir -p test/api/client && swagger project generate-test -t expect -o -f supertest && swagger project test
-
