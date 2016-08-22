@@ -11,7 +11,7 @@ let proxyquireStubs = {};
 
 const CardHistory = require('./../../../api/model/cardHistory.js');
 
-describe('For the CardHistoryController expect', () => {
+describe('Expect cardHistoryController', () => {
   describe('/post', () => {
     beforeEach('setup spies', () => {
       this.resSpy = spy();

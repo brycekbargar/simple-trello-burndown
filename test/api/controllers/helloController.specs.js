@@ -9,7 +9,7 @@ let proxyquireStubs = {};
 
 const Hello = require('./../../../api/model/hello.js');
 
-describe('For the HelloController expect', () => {
+describe('Expect helloController', () => {
   describe('/get?name={name}', () => {
     beforeEach('setup spies', () => {
       this.resSpy = spy();
