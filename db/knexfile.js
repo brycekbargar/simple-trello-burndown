@@ -15,7 +15,8 @@ module.exports = {
     client: 'mariasql',
     connection: {
       host: '127.0.0.1',
-      database: 'simple_trello_burndown',
+      db: 'simple_trello_burndown',
+      user: 'root'
     },
     pool: {
       min: 2,
@@ -31,7 +32,7 @@ module.exports = {
     client: 'mariasql',
     connection: {
       host: process.env.JAWSDB_MARIA_URL,
-      database: 'simple_trello_burndown',
+      db: 'simple_trello_burndown',
     },
     pool: {
       min: 2,

@@ -42,6 +42,8 @@
     "start": "swagger project start",
     "swagger": "swagger",
     "heroku-prebuild": "npm install swagger",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "create-migration": "knex migrate:make --knexfile ./db/knexfile.js",
+    "migrate": "knex migrate:latest --knexfile ./db/knexfile.js"
   }
 }
