@@ -4,6 +4,7 @@ const spy = require('sinon').spy;
 const expect = require('chai')
   .use(require('sinon-chai'))
   .expect;
+const params = require('./../utils/swaggerParams.js');
 const proxyquire = require('proxyquire').noCallThru();
 let proxyquireStubs = {};
 
@@ -22,9 +23,12 @@ describe('For the CardHistoryController expect', () => {
         listId: 1
       }];
       proxyquire('./../../../api/controllers/cardHistoryController.js', proxyquireStubs)
-        .post({
-          swagger: { params: { updates: { value: this.updates } } }
-        }, { send: this.resStub });
+        .post(params([{
+          name: 'updates',
+          value: this.updates
+        }]), { 
+          send: this.resStub 
+        });
     });
     afterEach('teardown spies', () => {
     });

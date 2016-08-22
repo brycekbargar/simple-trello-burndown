@@ -4,6 +4,7 @@ const spy = require('sinon').spy;
 const expect = require('chai')
   .use(require('sinon-chai'))
   .expect;
+const params = require('./../utils/swaggerParams.js');
 const proxyquire = require('proxyquire').noCallThru();
 let proxyquireStubs = {};
 
@@ -20,9 +21,12 @@ describe('For the HelloController expect', () => {
     beforeEach('make call', () => {
       this.name = 'Bryce';
       proxyquire('./../../../api/controllers/helloController.js', proxyquireStubs)
-        .get({
-          swagger: { params: { name: { value: this.name } } }
-        }, { send: this.resStub });
+        .get(params([{
+          name: 'name',
+          value: this.name
+        }]), { 
+          send: this.resStub 
+        });
     });
     afterEach('teardown spies', () => {
       this.greetSpy.restore();
