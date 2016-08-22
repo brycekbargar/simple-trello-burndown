@@ -4,7 +4,7 @@ const CardHistory = require('./../model/cardHistory.js');
 
 function post(req, res) {
   let updates = req.swagger.params.updates.value;
-  new CardHistory(updates[0]);
+  CardHistory.bulkCreate(updates.map(u => new CardHistory(u)));
   res.send(204);
 }
 
