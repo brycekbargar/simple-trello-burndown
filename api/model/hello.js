@@ -1,11 +1,12 @@
 'use strict';
 const util = require('util');
 
-const Hello = function(name) {
-  const model = this;
-  model.name = name || 'stranger';
- 
-  model.greet = () => util.format('Hello, %s!', model.name);
+function Hello(name) {
+  this.name = name || 'stranger';
+}
+
+Hello.prototype.greet = function() {
+  return util.format('Hello, %s!', this.name);
 };
 
 module.exports = Hello;

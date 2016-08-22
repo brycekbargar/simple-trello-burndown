@@ -7,5 +7,5 @@ module.exports = {
 
 function hello(req, res) {
   var hello = new Hello(req.swagger.params.name.value);
-  res.json(hello.greet());
+  res.send(hello.greet());
 }
