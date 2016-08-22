@@ -1,30 +1,23 @@
-swagger: "2.0"
+swagger: '2.0'
+
 info:
   version: "0.0.1"
-  title: Hello World App
-# during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths 
+  title: Iddeal Trello Burndown
 basePath: /
-# 
 schemes:
-  # tip: remove http to make production-grade
   - http
   - https
-# format of bodies a client can send (Content-Type)
 consumes:
   - application/json
-# format of the responses to the client (Accepts)
 produces:
   - application/json
+
 paths:
+
   /hello:
-    # binds a127 app logic to a route
     x-swagger-router-controller: hello_world
     get:
       description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
       parameters:
         - name: name
           in: query
@@ -35,16 +28,169 @@ paths:
         "200":
           description: Success
           schema:
-            # a pointer to a definition
             $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /swagger:
-    x-swagger-pipe: swagger_raw
-# complex objects have schema definitions
+
+  /CardHistory:
+    post:
+      description: |
+        Snapshots the current list state of the cards
+      parameters:
+        - in: body
+          name: updates
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/WriteCardHistory"
+      responses:
+        204:
+          description: Success
+    get:
+      description: |
+        Gets a list of filtered history of the cards
+      parameters:
+        - in: query
+          name: dateRangeStart
+          type: string
+          format: date
+        - in: query
+          name: dateRangeEnd
+          type: string
+          format: date
+        - in: query
+          name: status
+          description: One of ["backlog", "dev", "qa", "done"]
+          type: string
+        - in: query
+          name: cardNumber
+          type: integer
+          format: int32
+        - in: query
+          name: listId
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ReadCardHistory"
+
+  /CardHistory/Orphans:
+    get:
+      description: |
+        Gets a list of the Card Numbers or List Ids we have history for but not the actual item
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ReadCardHistoryOrphan"
+        
+  /Lists/{listId}:
+    put:
+      description: |
+        Create or replace the List with the given Id
+      parameters:
+        - in: path 
+          name: listId
+          required: true
+          type: integer
+          format: int32
+        - in: body 
+          name: list
+          required: true
+          schema:
+            $ref: "#/definitions/WriteList"
+      responses:
+        201:
+          description: Successfully created List
+        204:
+          description: Successfully replaced existing List
+    get:
+      description: |
+        Gets the List with the given Id
+      parameters:
+        - in: path 
+          name: listId
+          required: true
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/ReadList"
+        404:
+          description: Not Found
+          
+  /Lists/:
+    get:
+      description: |
+        Gets all Lists
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ReadList"
+              
+  /Cards/{cardNumber}:
+    get:
+      description: |
+        Gets the Cist with the given Number
+      parameters:
+        - in: path 
+          name: cardNumber
+          required: true
+          type: integer
+          format: int32
+      responses:
+        200: 
+          description: Success
+          schema: 
+            $ref: "#/definitions/ReadCard"
+        404:
+          description: Not Found
+    put:
+      description: |
+        Create or replace the Card with the given Number
+      parameters:
+        - in: path 
+          name: cardNumber
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: card
+          required: true
+          schema:
+            $ref: "#/definitions/WriteCard"
+      responses:
+        200: 
+          description: Success
+          schema: 
+            $ref: "#/definitions/ReadCard"
+            
+  /Cards/:
+    get:
+      description: |
+        Gets all Cards
+      responses:
+        200: 
+          description: Success
+          schema: 
+            type: array
+            items:
+              $ref: "#/definitions/ReadCard"
+              
 definitions:
   HelloWorldResponse:
     required:
@@ -58,3 +204,75 @@ definitions:
     properties:
       message:
         type: string
+  Status:
+    type: string
+    enum:
+      - backlog
+      - dev
+      - qa
+      - done
+  OrphanType:
+    type: string
+    enum:
+      - card
+      - list
+  WriteCardHistory:
+    type: object
+    properties:
+      cardNo:
+        type: integer
+        format: int32
+      listId: 
+        type: integer
+        format: int32
+  ReadCardHistory:
+    type: object
+    properties:
+      status:
+        $ref: "#/definitions/Status"
+      date:
+        type: string
+        format: date
+  ReadCardHistoryOrphan:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      type:
+        $ref: "#/definitions/OrphanType"
+  WriteList:
+    type: object
+    properties:
+      name:
+        type: string
+      status:
+        $ref: "#/definitions/Status"
+      displayPosition:
+        type: integer
+        format: int32
+        description: The display position of this list
+  ReadList:
+    type: object
+    allOf: 
+      - $ref: "#/definitions/WriteList"
+      - properties:
+          listId:
+            type: integer
+            format: int32
+  WriteCard:
+    type: object
+    properties:
+      title:
+        type: string
+      uri:
+        type: string
+        format: uri
+  ReadCard:
+    type: object
+    allOf:
+      - $ref: "#/definitions/WriteCard"
+      - properties:
+          CardNumber:
+            type: integer
+            format: int32
