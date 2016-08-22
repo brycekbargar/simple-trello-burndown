@@ -36,4 +36,8 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# Heroku environment variable for local dev
 .env
+
+# Test databases
+*.sqlite3

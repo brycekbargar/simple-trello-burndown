@@ -20,6 +20,7 @@
     "knex": "^0.11.10",
     "mariasql": "^0.2.6",
     "restify": "^4.0.2",
+    "sqlite3": "^3.1.4",
     "swagger-restify-mw": "^0.7.0"
   },
   "devDependencies": {
