@@ -41,5 +41,23 @@ describe('Expect CardHistory', () => {
       .to.eventually.be.true
       .notify(done); 
     });
+    it('to not perform partial inserts', done => {
+      let cardHistories = tbd.from({
+        cardNo: 1,
+        listId: 1
+      })
+      .make(5)
+      .map(x => new this.CardHistory(x));
+
+      cardHistories.splice(2, 0, new this.CardHistory({}));
+
+      expect(
+        this.CardHistory
+          .bulkCreate(cardHistories)
+          .catch(() => this.knex('card_histories').count('card_no as COUNT'))
+          .then(count => count[0].COUNT))
+      .to.eventually.equal(0)
+      .notify(done); 
+    });
   });
 });
