@@ -32,7 +32,7 @@
     "swagger": "^0.7.5"
   },
   "watch": {
-    "test": "{api, test}/*.js"
+    "test": "{api,test}/**/*.js"
   },
   "scripts": {
     "test": "eslint ./ && istanbul cover _mocha",
