@@ -23,8 +23,8 @@ describe('Expect CardHistory', () => {
   describe('.bulkCreate()', () => {
     it('to insert the given CardHistories', done => {
       let cardHistories = tbd.from({})
-      .prop('cardNo').use(tbd.utils.range(1, 100)).done()
-      .prop('listId').use(tbd.utils.range(1, 100)).done()
+      .prop('cardNo').use(tbd.utils.range(1, 10000)).done()
+      .prop('listId').use(tbd.utils.range(1, 10000)).done()
       .make(tbd.utils.range(5, 10)())
       .map(x => new this.CardHistory(x));
 
@@ -38,14 +38,13 @@ describe('Expect CardHistory', () => {
                   !!r.created_at &&
                   r.card_no === ch.cardNo &&
                   r.list_id === ch.listId))))
-      .to.eventually.be.true
-      .notify(done); 
+        .to.eventually.be.true
+        .notify(done); 
     });
     it('to not perform partial inserts', done => {
-      let cardHistories = tbd.from({
-        cardNo: 1,
-        listId: 1
-      })
+      let cardHistories = tbd.from({})
+      .prop('cardNo').use(tbd.utils.range(1, 10000)).done()
+      .prop('listId').use(tbd.utils.range(1, 10000)).done()
       .make(5)
       .map(x => new this.CardHistory(x));
 
@@ -56,8 +55,20 @@ describe('Expect CardHistory', () => {
           .bulkCreate(cardHistories)
           .catch(() => this.knex('card_histories').count('card_no as COUNT'))
           .then(count => count[0].COUNT))
-      .to.eventually.equal(0)
-      .notify(done); 
+        .to.eventually.equal(0)
+        .notify(done); 
+    });
+    it('to not not allow duplicates', done => {
+      let cardHistories = tbd.from({
+        cardNo: 1,
+        listId: 1
+      })
+      .make(2)
+      .map(x => new this.CardHistory(x));
+
+      expect(this.CardHistory.bulkCreate(cardHistories))
+        .to.be.rejected
+        .notify(done); 
     });
   });
 });
