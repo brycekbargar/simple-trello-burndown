@@ -31,9 +31,14 @@ describe('Expect CardHistory', () => {
       expect(
         this.CardHistory
           .bulkCreate(cardHistories)
-          .then(() => this.knex('card_histories').count('card_no as count'))
-          .then(r => r[0].count))
-      .to.eventually.equal(cardHistories.length)
+          .then(() => this.knex.select().from('card_histories'))
+          .then(rows => 
+              cardHistories.every(ch => 
+                rows.find(r => 
+                  !!r.created_at &&
+                  r.card_no === ch.cardNo &&
+                  r.list_id === ch.listId))))
+      .to.eventually.be.true
       .notify(done); 
     });
   });
