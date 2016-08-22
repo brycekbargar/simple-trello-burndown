@@ -2,9 +2,11 @@
 const expect = require('chai')
   .use(require('chai-as-promised'))
   .expect;
-const knexFactory = require('./../utils/knexFactory.js');
+const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
 let proxyquireStubs = {};
+
+const knexFactory = require('./../utils/knexFactory.js');
 
 describe('Expect CardHistory', () => {
   beforeEach('setup knex', done => {
@@ -20,23 +22,11 @@ describe('Expect CardHistory', () => {
   });
   describe('.bulkCreate()', () => {
     it('to insert the given CardHistories', done => {
-      let cardHistories = [
-        new this.CardHistory({
-          cardNo: 1,
-          listId: 1,
-        }),
-        new this.CardHistory({
-          cardNo: 2,
-          listId: 2,
-        }),
-        new this.CardHistory({
-          cardNo: 3,
-          listId: 3,
-        }),
-        new this.CardHistory({
-          cardNo: 4,
-          listId: 4,
-        })];
+      let cardHistories = tbd.from({})
+      .prop('cardNo').use(tbd.utils.range(1, 100)).done()
+      .prop('listId').use(tbd.utils.range(1, 100)).done()
+      .make(tbd.utils.range(5, 10)())
+      .map(x => new this.CardHistory(x));
 
       expect(
         this.CardHistory
