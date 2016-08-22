@@ -28,6 +28,7 @@
   "scripts": {
     "test": "swagger project test",
     "start": "swagger project start",
-    "swagger": "swagger"
+    "swagger": "swagger",
+    "heroku-prebuild": "npm install swagger"
   }
 }
