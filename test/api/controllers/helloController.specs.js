@@ -18,13 +18,11 @@ describe('For the HelloController expect', () => {
       this.greetSpy = spy(Hello.prototype, 'greet');
     });
     beforeEach('make call', () => {
-      const helloController = proxyquire(
-        './../../../api/controllers/helloController.js',
-        proxyquireStubs);
       this.name = 'Bryce';
-      helloController.get({
-        swagger: { params: { name: { value: this.name } } }
-      }, { send: this.resStub });
+      proxyquire('./../../../api/controllers/helloController.js', proxyquireStubs)
+        .get({
+          swagger: { params: { name: { value: this.name } } }
+        }, { send: this.resStub });
     });
     afterEach('teardown spies', () => {
       this.greetSpy.restore();

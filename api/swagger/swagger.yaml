@@ -15,7 +15,7 @@ produces:
 paths:
 
   /hello:
-    x-swagger-router-controller: hello_world
+    x-swagger-router-controller: helloController
     get:
       description: Returns 'Hello' to the caller
       parameters:
@@ -35,6 +35,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 
   /CardHistory:
+    x-swagger-router-controller: cardHistoryController
     post:
       description: |
         Snapshots the current list state of the cards
@@ -82,7 +83,9 @@ paths:
               $ref: "#/definitions/ReadCardHistory"
 
   /CardHistory/Orphans:
+    x-swagger-router-controller: cardHistoryController
     get:
+      operationId: orphans
       description: |
         Gets a list of the Card Numbers or List Ids we have history for but not the actual item
       responses:
