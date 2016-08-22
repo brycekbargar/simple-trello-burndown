@@ -13,7 +13,7 @@ describe('Expect CardHistory', () => {
     knexFactory()
     .then(knex => { 
       this.knex = knex; 
-      proxyquireStubs['knex'] = knex; 
+      proxyquireStubs['./knexFactory.js'] = () => knex; 
     })
     .then(done);
   });

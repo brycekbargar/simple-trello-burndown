@@ -1,5 +1,5 @@
 'use strict';
-const knex = require('knex');
+const knexFactory = require('./knexFactory.js');
 
 function CardHistory(data) {
   this.cardNo = data.cardNo;
@@ -7,7 +7,7 @@ function CardHistory(data) {
 }
 
 CardHistory.bulkCreate = cardHistories =>
-  knex.transaction(tx => 
+  knexFactory().transaction(tx => 
     Promise.all(
       cardHistories
         .map(ch => tx
