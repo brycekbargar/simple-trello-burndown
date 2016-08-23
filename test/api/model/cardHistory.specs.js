@@ -27,16 +27,16 @@ describe('Expect CardHistory', () => {
 
       expect(
         this.CardHistory
-          .bulkCreate(cardHistories.map(x => new this.CardHistory(x)))
-          .then(() => this.knex.select().from('card_histories'))
-          .then(rows => 
-              cardHistories.every(ch => 
-                rows.find(r => 
-                  !!r.created_at &&
-                  r.card_no === ch.cardNo &&
-                  r.list_id === ch.listId))))
-        .to.eventually.be.true
-        .notify(done); 
+        .bulkCreate(cardHistories.map(x => new this.CardHistory(x)))
+        .then(() => this.knex.select().from('card_histories'))
+        .then(rows => 
+            cardHistories.every(ch => 
+              rows.find(r => 
+                !!r.created_at &&
+                r.card_no === ch.cardNo &&
+                r.list_id === ch.listId))))
+      .to.eventually.be.true
+      .notify(done); 
     });
     it('to not perform partial inserts', done => {
       const cardHistories = tbd.from({})
@@ -49,11 +49,11 @@ describe('Expect CardHistory', () => {
 
       expect(
         this.CardHistory
-          .bulkCreate(cardHistories)
-          .catch(() => this.knex('card_histories').count('card_no as COUNT'))
-          .then(count => count[0].COUNT))
-        .to.eventually.equal(0)
-        .notify(done); 
+        .bulkCreate(cardHistories)
+        .catch(() => this.knex('card_histories').count('card_no as COUNT'))
+        .then(count => count[0].COUNT))
+      .to.eventually.equal(0)
+      .notify(done); 
     });
     it('to not not allow duplicates', done => {
       const cardHistories = tbd.from({
@@ -64,8 +64,8 @@ describe('Expect CardHistory', () => {
       .map(x => new this.CardHistory(x));
 
       expect(this.CardHistory.bulkCreate(cardHistories))
-        .to.be.rejected
-        .notify(done); 
+      .to.be.rejected
+      .notify(done); 
     });
   });
 
