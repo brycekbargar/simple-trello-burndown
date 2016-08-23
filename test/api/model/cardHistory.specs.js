@@ -4,22 +4,19 @@ const expect = require('chai')
   .expect;
 const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
-let proxyquireStubs = {};
 
-const knexFactory = require('./../utils/knexFactory.js');
+const knexFactory = require('./../utils/knexFactory.js')();
 
 describe('Expect CardHistory', () => {
-  beforeEach('setup knex', done => {
-    knexFactory()
-    .then(knex => { 
-      this.knex = knex; 
-      proxyquireStubs['./knexFactory.js'] = () => knex; 
-    })
-    .then(done);
-  });
+  beforeEach('setup proxyquire', () => this.proxyquireStubs = {});
+
+  beforeEach('setup knex', () => knexFactory(this));
+  afterEach('teardown knex', () => this.knex.destroy());
+
   beforeEach('setup CardHistory', () => {
-    this.CardHistory = proxyquire('./../../../api/model/cardHistory.js', proxyquireStubs);
+    this.CardHistory = proxyquire('./../../../api/model/cardHistory.js', this.proxyquireStubs);
   });
+
   describe('.bulkCreate()', () => {
     it('to insert the given CardHistories', done => {
       let cardHistories = tbd.from({})
