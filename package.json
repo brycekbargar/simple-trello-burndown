@@ -50,7 +50,7 @@
     "test": "eslint ./ && istanbul cover _mocha",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",
-    "heroku-postbuild": "npm run migrate -- --environment=production",
-    "migrate": "knex migrate:latest --knexfile ./config/knexfile.js"
+    "heroku-postbuild": "knex migrate:latest --knexfile=./config/knexfile.js --env=production",
+    "init-dev": "./resetDevDatabase.js"
   }
 }
