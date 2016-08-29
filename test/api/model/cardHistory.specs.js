@@ -77,7 +77,7 @@ describe('Expect CardHistory', () => {
       .prop('list_id').use(tbd.utils.sequential(1)).done()
       .make(7);
       const lists = tbd.from({
-        name: 'blah',
+        name: 'nutella crepes',
         order: 1
       })
       .prop('id').use(tbd.utils.sequential(3)).done()
@@ -99,6 +99,40 @@ describe('Expect CardHistory', () => {
           .and.to.eventually.all.have.property('createdAt')
           .notify(done))
         .catch(done);
+    });
+  });
+
+  describe('.listOrphans', () => {
+    it('to return ids of missing lists and cards', done => {
+      const cardHistories = tbd.from({})
+      .prop('card_no').use(tbd.utils.sequential(3)).done()
+      .prop('list_id').use(tbd.utils.sequential(5)).done()
+      .make(7);
+      const lists = tbd.from({
+        name: 'nutella crepes', 
+        order: 1
+      })
+      .prop('id').use(tbd.utils.sequential(4)).done()
+      .make(7);
+      const cards = tbd.from({
+        name: 'banana pancakes'
+      })
+      .prop('no').use(tbd.utils.sequential(2)).done()
+      .make(7);
+
+      this.knex.transaction(tx =>
+        Promise.all([
+          Promise.all(cardHistories.map(ch => tx.insert(ch).into('card_histories'))),
+          Promise.all(lists.map(l => tx.insert(l).into('lists'))),
+          Promise.all(cards.map(c => tx.insert(c).into('cards')))
+        ]))
+      .then(() => expect(this.CardHistory.listOrphans())
+        .to.eventually.have.length(2)
+        .and.to.eventually.all.be.an.instanceOf(this.CardHistory)
+        .and.to.eventually.include({listId: 11})
+        .and.to.eventually.include({cardNo: 9})
+        .notify(done))
+      .catch(done);
     });
   });
 });

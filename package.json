@@ -48,7 +48,7 @@
     }
   },
   "scripts": {
-    "test": "eslint ./ && istanbul cover _mocha",
+    "test": "eslint ./ && istanbul cover _mocha || true",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",
     "heroku-postbuild": "knex migrate:latest --knexfile ./config/knexfile.js --env production",
