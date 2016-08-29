@@ -10,10 +10,20 @@ function List(data) {
 
 List.createOrReplace = list => {
   let isNew = true;
-  return knexFactory().then(knex => knex
-    .insert(list).into('lists')
-    .debug()
-    .tap(console.log))
+  return knexFactory().then(knex => knex.transaction(tx =>
+    tx.count('id as count').from('lists').where('id', list.id)
+    .then(rows => rows[0].count)
+    .then(count => {
+      if(count === 0){
+        return tx.insert(list).into('lists');
+      }
+      else {
+        isNew = false;
+        return tx('lists')
+          .where('id', list.id).del()
+          .then(() => tx.insert(list).into('lists'));
+      }
+    })))
   .then(() => isNew);
 };
 
