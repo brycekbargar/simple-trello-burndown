@@ -4,6 +4,7 @@
 const config = require('./knexfile.js')['development'];
 const db = config.connection.db;
 delete config.connection.db;
+config.migrations.directory = './migrations';
 
 // SQL INJECT ALL THE THINGS!
 let knex = require('knex')(config);
