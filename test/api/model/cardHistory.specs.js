@@ -89,8 +89,8 @@ describe('Expect CardHistory', () => {
 
       this.knex.transaction(tx => 
         Promise.all([
-          Promise.all(cardHistories.map(ch => tx.insert(ch).into('card_histories'))),
-          Promise.all(lists.map(l => tx.insert(l).into('lists')))
+          tx.insert(cardHistories).into('card_histories'),
+          tx.insert(lists).into('lists')
         ]))
         .then(() => expect(this.CardHistory.list())
           .to.eventually.have.length(2)
@@ -122,9 +122,9 @@ describe('Expect CardHistory', () => {
 
       this.knex.transaction(tx =>
         Promise.all([
-          Promise.all(cardHistories.map(ch => tx.insert(ch).into('card_histories'))),
-          Promise.all(lists.map(l => tx.insert(l).into('lists'))),
-          Promise.all(cards.map(c => tx.insert(c).into('cards')))
+          tx.insert(cardHistories).into('card_histories'),
+          tx.insert(lists).into('lists'),
+          tx.insert(cards).into('cards')
         ]))
       .then(() => expect(this.CardHistory.listOrphans())
         .to.eventually.have.length(2)

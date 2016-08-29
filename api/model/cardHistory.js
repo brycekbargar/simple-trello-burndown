@@ -13,9 +13,7 @@ function CardHistory(data) {
 }
 
 CardHistory.bulkCreate = cardHistories =>
-  knexFactory().transaction(tx => 
-    Promise.all(cardHistories.map(ch =>
-      tx.insert(ch).into('card_histories'))));
+  knexFactory().insert(cardHistories).into('card_histories');
 
 CardHistory.list = () =>
   knexFactory().select([
