@@ -8,7 +8,13 @@ function List(data) {
   if(data.status) this.status = data.status;
 }
 
-List.createOrReplace = () => 
-  knexFactory().then(knex => knex != null);
+List.createOrReplace = list => {
+  let isNew = true;
+  return knexFactory().then(knex => knex
+    .insert(list).into('lists')
+    .debug()
+    .tap(console.log))
+  .then(() => isNew);
+};
 
 module.exports = List;

@@ -19,9 +19,13 @@ describe('Expect List', () => {
 
   describe('.createOrReplace', () => {
     it('to be ok', done => {
-      expect(
-        this.List
-        .createOrReplace())
+      const list = new this.List({
+        id: 5,
+        name: 'Test List',
+        order: 7,
+        status: 'qa'
+      });
+      expect(this.List.createOrReplace(list))
       .to.eventually.be.ok
       .notify(done);
     });
