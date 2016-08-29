@@ -27,4 +27,8 @@ List.createOrReplace = list => {
   .then(() => isNew);
 };
 
+List.update = list => knexFactory().then(knex => knex('lists')
+  .where('id', list.id)
+  .update(list));
+
 module.exports = List;

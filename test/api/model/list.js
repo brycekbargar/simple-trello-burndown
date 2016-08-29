@@ -17,23 +17,25 @@ describe('Expect List', () => {
     this.List = proxyquire('./../../../api/model/list.js', this.proxyquireStubs);
   });
 
-  describe('.createOrReplace', () => {
-    beforeEach('setup test list', () => this.testList = {
+  beforeEach('setup test list', () => {
+    this.testList = {
       id: 5,
       name: 'Test List',
       order: 7,
       status: 'qa'
-    });
-    
+    };
+    return this.knex.insert(this.testList).into('lists');
+  });
+
+  describe('.createOrReplace()', () => {
     it('to return true for new rows', done => {
+      this.testList.id = 156;
       expect(this.List.createOrReplace(this.testList))
       .to.eventually.be.true
       .notify(done);
     });
     it('to return false for replaced rows', done => {
-      expect(
-        this.knex.insert(this.testList).into('lists')
-        .then(() => this.List.createOrReplace(this.testList)))
+      expect(this.List.createOrReplace(this.testList))
       .to.eventually.be.false
       .notify(done);
     });
@@ -49,6 +51,7 @@ describe('Expect List', () => {
       .notify(done);
     });
     it('to save new rows', done => {
+      this.testList.id = 156213;
       expect(
         this.List
         .createOrReplace(this.testList)
@@ -64,8 +67,7 @@ describe('Expect List', () => {
         order: 4816
       };
       expect(
-        this.knex.insert(this.testList).into('lists')
-        .then(() => this.List.createOrReplace(updatedList))
+        this.List.createOrReplace(updatedList)
         .then(() => this.knex.count('id as count').from('lists').where(updatedList))
         .then(rows => rows[0].count))
       .to.eventually.equal(1)
@@ -76,13 +78,33 @@ describe('Expect List', () => {
         id: this.testList.id,
       };
       expect(
-        this.knex.insert(this.testList).into('lists')
-        .then(() => this.List.createOrReplace(updatedList))
+        this.List.createOrReplace(updatedList)
         .catch(() => this.knex.count('id as count').from('lists').where(this.testList))
         .then(rows => rows[0].count))
       .to.eventually.equal(1)
       .notify(done);
     });
-
+  });
+  describe('.update()', () => {
+    it('to partially update properties', done => {
+      const updatedList = {
+        id: this.testList.id,
+        order: 4816
+      };
+      expect(
+        this.List.update(updatedList)
+        .then(() => this.knex
+          .count('id as count')
+          .from('lists')
+          .where({
+            id: this.testList.id,
+            name: this.testList.name,
+            order: updatedList.order,
+            status: this.testList.status
+          }))
+        .then(rows => rows[0].count))
+      .to.eventually.equal(1)
+      .notify(done);
+    });
   });
 });

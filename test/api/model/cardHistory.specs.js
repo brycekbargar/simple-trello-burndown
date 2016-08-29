@@ -102,7 +102,7 @@ describe('Expect CardHistory', () => {
     });
   });
 
-  describe('.listOrphans', () => {
+  describe('.listOrphans()', () => {
     it('to return ids of missing lists and cards', done => {
       const cardHistories = tbd.from({})
       .prop('card_no').use(tbd.utils.sequential(3)).done()
