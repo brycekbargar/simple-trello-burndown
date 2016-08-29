@@ -2,7 +2,7 @@
 
 module.exports = debug => 
   context => {
-    const knex = require('knex')({
+    context.knex = require('knex')({
       client: 'sqlite3',
       connection: ':memory:',
       migrations: {
@@ -13,8 +13,7 @@ module.exports = debug =>
       debug: !!debug
     });
 
-    context.knex = knex;
-    context.proxyquireStubs['./knexFactory.js'] = () => knex;
+    context.proxyquireStubs['./knexFactory.js'] = () => Promise.resolve(context.knex);
 
-    return knex.migrate.latest();
+    return context.knex.migrate.latest();
   };

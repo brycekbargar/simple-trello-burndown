@@ -5,6 +5,6 @@ const knexfile = require('./../../config/knexfile.js');
 
 let connection;
 module.exports = () => {
-  return connection = connection || knex(knexfile[config.environment]);
+  return Promise.resolve(connection = connection || knex(knexfile[config.environment]));
 };
 

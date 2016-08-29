@@ -13,35 +13,37 @@ function CardHistory(data) {
 }
 
 CardHistory.bulkCreate = cardHistories =>
-  knexFactory().insert(cardHistories).into('card_histories');
+  knexFactory().then(knex => knex.insert(cardHistories).into('card_histories'));
 
 CardHistory.list = () =>
-  knexFactory().select([
-    'CH.created_at',
-    'L.status'
-  ])
-  .from('card_histories as CH')
-  .innerJoin('lists as L', 'CH.list_id', 'L.id')
-  .whereNotNull('L.status')
+  knexFactory().then(knex => knex
+    .select([
+      'CH.created_at',
+      'L.status'
+    ])
+    .from('card_histories as CH')
+    .innerJoin('lists as L', 'CH.list_id', 'L.id')
+    .whereNotNull('L.status'))
   .then(rows => rows.map(r => new CardHistory(r)));
 
 CardHistory.listOrphans = () =>
-  knexFactory().select([
-    'CH.list_id as list_id',
-    knexFactory().raw('null as card_no')
-  ])
-  .from('card_histories as CH')
-  .leftJoin('lists as L', 'CH.list_id', 'L.id')
-  .whereNull('L.id')
-  .union(function() {
-    this.select([
-      knexFactory().raw('null as list_id'),
-      'CH.card_no'
+  knexFactory().then(knex => knex
+    .select([
+      'CH.list_id as list_id',
+      knex.raw('null as card_no')
     ])
     .from('card_histories as CH')
-    .leftJoin('cards as C', 'CH.card_no', 'C.no')
-    .whereNull('C.no');
-  })
+    .leftJoin('lists as L', 'CH.list_id', 'L.id')
+    .whereNull('L.id')
+    .union(function() {
+      this.select([
+        knex.raw('null as list_id'),
+        'CH.card_no'
+      ])
+      .from('card_histories as CH')
+      .leftJoin('cards as C', 'CH.card_no', 'C.no')
+      .whereNull('C.no');
+    }))
   .then(rows => rows.map(r => new CardHistory(r)));
 
 module.exports = CardHistory;
