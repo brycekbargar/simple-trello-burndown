@@ -52,28 +52,7 @@ paths:
           description: Success
     get:
       description: |
-        Gets a list of filtered history of the cards
-      parameters:
-        - in: query
-          name: dateRangeStart
-          type: string
-          format: date
-        - in: query
-          name: dateRangeEnd
-          type: string
-          format: date
-        - in: query
-          name: status
-          description: One of ["backlog", "dev", "qa", "done"]
-          type: string
-        - in: query
-          name: cardNumber
-          type: integer
-          format: int32
-        - in: query
-          name: listId
-          type: integer
-          format: int32
+        Gets a list of history of the cards
       responses:
         200:
           description: Success
@@ -214,11 +193,6 @@ definitions:
       - dev
       - qa
       - done
-  OrphanType:
-    type: string
-    enum:
-      - card
-      - list
   WriteCardHistory:
     type: object
     properties:
@@ -233,17 +207,19 @@ definitions:
     properties:
       status:
         $ref: "#/definitions/Status"
-      date:
+      createdAt:
         type: string
         format: date
   ReadCardHistoryOrphan:
     type: object
+    description: Only one of cardNo or listId will be set
     properties:
-      id:
+      cardNo:
         type: integer
         format: int32
-      type:
-        $ref: "#/definitions/OrphanType"
+      listId:
+        type: integer
+        format: int32
   WriteList:
     type: object
     properties:
