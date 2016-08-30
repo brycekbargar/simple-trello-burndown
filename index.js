@@ -23,5 +23,6 @@ const web = () =>
     }));
 
 module.exports = {
-  web:  web
+  web:  web,
+  scraper: () => console.log('running task')
 };
