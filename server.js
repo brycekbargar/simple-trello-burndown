@@ -1,1 +1,1 @@
-require('./index.js').web();
+require('./index.js').web().then(w => w.start());
