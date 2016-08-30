@@ -9,7 +9,10 @@ const web = () =>
     SwaggerRestify.create({
       appRoot: __dirname
     }, (err, swaggerRestify) => {
-      if (err) { reject(err); }
+      if (err) { 
+        reject(err); 
+        return;
+      }
   
       swaggerRestify.register(app);
 

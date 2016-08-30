@@ -29,7 +29,7 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/HelloWorldResponse"
-        default:
+        500:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
@@ -50,6 +50,10 @@ paths:
       responses:
         204:
           description: Success
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     get:
       description: |
         Gets a list of history of the cards
@@ -60,6 +64,10 @@ paths:
             type: array
             items:
               $ref: "#/definitions/ReadCardHistory"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /CardHistory/Orphans:
     x-swagger-router-controller: cardHistoryController
@@ -74,6 +82,10 @@ paths:
             type: array
             items:
               $ref: "#/definitions/ReadCardHistoryOrphan"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
         
   /Lists/{listId}:
     put:
@@ -95,22 +107,34 @@ paths:
           description: Successfully created List
         204:
           description: Successfully replaced existing List
-    get:
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    patch:
       description: |
-        Gets the List with the given Id
+        Updates the list with the given id
       parameters:
         - in: path 
           name: listId
           required: true
           type: integer
           format: int32
-      responses:
-        200:
-          description: Success
+        - in: body 
+          name: list
+          description: Undefined properties are ignored
+          required: true
           schema:
-            $ref: "#/definitions/ReadList"
+            $ref: "#/definitions/WriteList"
+      responses:
+        204:
+          description: Successfully updated list
         404:
           description: Not Found
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
           
   /Lists/:
     get:
@@ -123,24 +147,12 @@ paths:
             type: array
             items:
               $ref: "#/definitions/ReadList"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
               
   /Cards/{cardNumber}:
-    get:
-      description: |
-        Gets the Cist with the given Number
-      parameters:
-        - in: path 
-          name: cardNumber
-          required: true
-          type: integer
-          format: int32
-      responses:
-        200: 
-          description: Success
-          schema: 
-            $ref: "#/definitions/ReadCard"
-        404:
-          description: Not Found
     put:
       description: |
         Create or replace the Card with the given Number
@@ -156,23 +168,15 @@ paths:
           schema:
             $ref: "#/definitions/WriteCard"
       responses:
-        200: 
-          description: Success
-          schema: 
-            $ref: "#/definitions/ReadCard"
-            
-  /Cards/:
-    get:
-      description: |
-        Gets all Cards
-      responses:
-        200: 
-          description: Success
-          schema: 
-            type: array
-            items:
-              $ref: "#/definitions/ReadCard"
-              
+        201:
+          description: Successfully created Card
+        204:
+          description: Successfully replaced existing Card
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
 definitions:
   HelloWorldResponse:
     required:
@@ -244,14 +248,3 @@ definitions:
     properties:
       title:
         type: string
-      uri:
-        type: string
-        format: uri
-  ReadCard:
-    type: object
-    allOf:
-      - $ref: "#/definitions/WriteCard"
-      - properties:
-          CardNumber:
-            type: integer
-            format: int32
