@@ -51,7 +51,7 @@
     }
   },
   "scripts": {
-    "test": "eslint ./ && istanbul --color cover _mocha -- --reporter spec",
+    "test": "eslint ./ && istanbul --color cover _mocha -- --reporter list",
     "watch-test": "eslint ./ && istanbul --color cover _mocha -- --reporter min || true",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",

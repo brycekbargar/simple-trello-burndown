@@ -29,7 +29,8 @@ List.createOrReplace = list => {
 
 List.update = list => knexFactory().then(knex => knex('lists')
   .where('id', list.id)
-  .update(list));
+  .update(list)
+  .then(count => count === 1));
 
 List.list = () => 
   knexFactory().then(knex => knex

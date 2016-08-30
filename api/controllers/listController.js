@@ -1,12 +1,12 @@
 'use strict';
 
+const restify = require('restify');
 const List = require('./../model/model.js').List;
 
 const newList = req => {
   let list = Object.assign({}, { 
     id: req.swagger.params.listId.value
   }, req.swagger.params.list.value);
-  console.log(list);
   return new List(list);
 };
 
@@ -24,7 +24,13 @@ function get(_, res, next) {
 
 function patch(req, res, next) {
   return List.update(newList(req))
-    .then(() => res.send(204))
+    .then(updated => {
+      if(updated) {
+        res.send(204);
+      } else {
+        next(new restify.ResourceNotFoundError());
+      }
+    })
     .catch(next);
 }
 

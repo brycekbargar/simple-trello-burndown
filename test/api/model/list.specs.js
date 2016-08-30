@@ -104,7 +104,23 @@ describe('Expect List', () => {
       .to.eventually.equal(1)
       .notify(done);
     });
+    describe('to correctly report when', () => {
+      it('the list was updated', done => {
+        expect(this.List.update(this.testList))
+        .to.eventually.be.true
+        .notify(done);
+      });
+      it('the list was not found', done => {
+        const list = new this.List({
+          id: 1564231
+        });
+        expect(this.List.update(list))
+        .to.eventually.be.false
+        .notify(done);
+      });
+    });
   });
+
   describe('.list()', () => {
     it('to return all the lists', done => {
       const testLists = tbd.from({

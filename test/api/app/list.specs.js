@@ -104,7 +104,7 @@ describe('Expect /api/lists', () => {
       this.listId = 456123;
     });
     it('to update the list', done => {
-      this.updateStub.resolves();
+      this.updateStub.resolves(true);
       expect(chai.request(this.app)
         .patch(`/api/Lists/${this.listId}`)
         .send(this.list))
@@ -112,7 +112,7 @@ describe('Expect /api/lists', () => {
       .notify(done);
     });
     it('to attempt to update the list', () => {
-      this.updateStub.resolves();
+      this.updateStub.resolves(true);
       return chai.request(this.app)
         .patch(`/api/Lists/${this.listId}`)
         .send(this.list)
@@ -135,6 +135,15 @@ describe('Expect /api/lists', () => {
         .catch(err => err.response))
       .to.eventually.have.status(500)
       .to.eventually.have.deep.property('body.message', message)
+      .notify(done);
+    });
+    it('to report when the list was not found', done => {
+      this.updateStub.resolves(false);
+      expect(chai.request(this.app)
+        .patch(`/api/Lists/${this.listId}`)
+        .send(this.list).then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(404)
       .notify(done);
     });
   });
