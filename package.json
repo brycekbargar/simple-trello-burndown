@@ -18,7 +18,6 @@
   "homepage": "https://github.com/brycekbargar/simple-trello-burndown#readme",
   "dependencies": {
     "knex": "^0.11.10",
-    "mariasql": "^0.2.6",
     "restify": "^4.0.2",
     "swagger-restify-mw": "^0.7.0"
   },
@@ -55,6 +54,7 @@
     "watch-test": "eslint ./ && istanbul --color cover _mocha -- --reporter min || true",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",
+    "heroku-prebuild": "npm install mariasql",
     "heroku-postbuild": "knex migrate:latest --knexfile ./config/knexfile.js --env production",
     "init-dev": "./config/resetDevDatabase.js"
   }
