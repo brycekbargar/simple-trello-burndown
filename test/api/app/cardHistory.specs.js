@@ -26,20 +26,29 @@ describe('Expect /api/cardHistory', () => {
   before('setup server', () => start().then(s => this.app = s.app));
 
   describe('POST /', () => {
-    describe('with valid data', done => {
-      it('to be ok', () => {
-        const cardHistories = tbd.from({
-          listId: 1
-        })
-        .prop('cardNo').use(tbd.utils.range(1, 1563316)).done()
-        .make(15);
+    it('with valid data to be ok', done => {
+      const cardHistories = tbd.from({
+        listId: 1
+      })
+      .prop('cardNo').use(tbd.utils.range(1, 1563316)).done()
+      .make(15);
 
-        expect(chai.request(this.app)
-          .post('/api/CardHistory')
-          .send(cardHistories))
-        .to.eventually.have.status(201)
-        .notify(done);
-      });
+      expect(chai.request(this.app)
+        .post('/api/CardHistory')
+        .send(cardHistories))
+      .to.eventually.have.status(204)
+      .notify(done);
+    });
+    it('with invalid data to return validation errors', done => {
+      expect(chai.request(this.app)
+        .post('/api/CardHistory')
+        .send({ banana: 'pancakes' }).then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(400)
+      .and.to.eventually.be.json
+      .and.to.eventually.have.deep.property('body.message', 'Validation Errors') 
+      .and.also.eventually.have.deep.property('body.errors[0].code', 'INVALID_REQUEST_PARAMETER') 
+      .notify(done);
     });
   });
 });

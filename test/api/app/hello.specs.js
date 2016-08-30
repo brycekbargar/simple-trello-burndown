@@ -25,16 +25,14 @@ describe('Expect /api/hello', () => {
   before('setup server', () => start().then(s => this.app = s.app));
 
   describe('GET /', () => {
-    it('to greet the requester', () => {
+    it('to greet the requester', done => {
       const greeting = 'Pecan Waffles';
       this.greetStub.returns(greeting);
-      return chai.request(this.app)
-      .get('/api/hello')
-      .then(res => {
-        expect(res).to.have.status(200);
-        expect(res).to.be.json;
-        expect(res).to.have.property('body', greeting);
-      });
+      expect(chai.request(this.app).get('/api/hello'))
+      .to.eventually.have.status(200)
+      .and.to.eventually.be.json
+      .and.to.eventually.have.property('body', greeting)
+      .notify(done);
     });
     it('to greet a stranger', () => {
       return chai.request(this.app)
