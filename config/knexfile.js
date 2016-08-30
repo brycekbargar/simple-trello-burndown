@@ -19,11 +19,8 @@ module.exports = {
   },
 
   production: {
-    client: 'mariasql',
-    connection: {
-      host: process.env.JAWSDB_MARIA_URL,
-      db: 'simple_trello_burndown',
-    },
+    client: 'mysql',
+    connection: process.env.CLEARDB_DATABASE_URL,
     pool: {
       min: 2,
       max: 10

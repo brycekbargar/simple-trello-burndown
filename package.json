@@ -57,7 +57,7 @@
     "watch-test": "npm test --simple-trello-burndown:reporter=min || true",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",
-    "heroku-prebuild": "npm install mariasql",
+    "heroku-prebuild": "npm ls | grep mysql || npm install mysql",
     "heroku-postbuild": "knex migrate:latest --knexfile ./config/knexfile.js --env production",
     "init-dev": "./config/resetDevDatabase.js"
   }
