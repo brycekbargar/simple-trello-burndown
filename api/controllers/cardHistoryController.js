@@ -10,12 +10,16 @@ function post(req, res, next) {
     .catch(next);
 }
 
-function get(req, res) {
-  res.send(200, CardHistory.list());
+function get(_, res, next) {
+  return CardHistory.list()
+    .then(list => res.send(200, list))
+    .catch(next);
 }
 
-function orphans(req, res) {
-  res.send([]);
+function orphans(_, res, next) {
+  return CardHistory.listOrphans()
+    .then(list => res.send(200, list))
+    .catch(next);
 }
 
 module.exports = {
