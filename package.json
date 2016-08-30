@@ -39,6 +39,9 @@
     "swagger": "^0.7.5",
     "tbd": "^0.6.4"
   },
+  "config": {
+    "reporter": "list"
+  },
   "watch": {
     "watch-test": {
       "patterns": [
@@ -50,8 +53,8 @@
     }
   },
   "scripts": {
-    "test": "eslint ./ && istanbul --color cover _mocha -- --reporter list",
-    "watch-test": "eslint ./ && istanbul --color cover _mocha -- --reporter min || true",
+    "test": "eslint ./ && istanbul --color cover _mocha -- --reporter $npm_package_config_reporter",
+    "watch-test": "npm test --simple-trello-burndown:reporter=min || true",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",
     "heroku-prebuild": "npm install mariasql",
