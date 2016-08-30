@@ -1,8 +1,5 @@
 'use strict';
-const expect = require('chai')
-  .use(require('chai-things'))
-  .use(require('chai-as-promised'))
-  .expect;
+const expect = require('./../utils/chai.js').expect;
 const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
 
