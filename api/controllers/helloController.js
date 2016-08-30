@@ -1,11 +1,11 @@
 'use strict';
-const Hello = require('./../model/hello.js');
+const Hello = require('./../model/model.js').Hello;
 
-function hello(req, res) {
+const greet = (req, res) => {
   var hello = new Hello(req.swagger.params.name.value);
-  res.send(hello.greet());
-}
+  res.send(Hello.greet(hello));
+};
 
 module.exports = {
-  get: hello
+  get: greet
 };

@@ -1,33 +1,62 @@
 'use strict';
 const chai = require('./../utils/chai.js');
 const expect = chai.expect;
+const sinon = require('sinon');
 
+const model = require('./../../../api/model/model.js');
+const start = require('./../../../index.js').web;
 
 describe('Expect /api/hello', () => {
-  beforeEach('setup server', done => {
-    require('./../../../index.js').web()
-    .then(w => this.app = w.app)
-    .then(() => done());
+  before('setup spies', () => {
+    this.HelloStub = sinon.stub(model, 'Hello');
+    this.HelloStub.returns(() => sinon.createStubInstance(model.Hello));
+    this.greetStub = sinon.stub(model.Hello, 'greet');
   });
+  after('teardown spies', () => {
+    this.greetStub.restore();
+    this.HelloStub.restore();
+  });
+  afterEach('reset spies', () => {
+    this.greetStub.reset();
+    this.greetStub.resetBehavior();
+    this.HelloStub.reset();
+  });
+
+  before('setup server', () => start().then(s => this.app = s.app));
+
   describe('GET /', () => {
-    it('to greet a stranger', done => {
-      expect(chai.request(this.app).get('/api/hello'))
-      .to.eventually.have.status(200)
-      .to.be.json
-      .to.have.property('body', 'Hello, stranger!')
-      .notify(done);
+    it('to greet the requester', () => {
+      const greeting = 'Pecan Waffles';
+      this.greetStub.returns(greeting);
+      return chai.request(this.app)
+      .get('/api/hello')
+      .then(res => {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res).to.have.property('body', greeting);
+      });
     });
-    it('to greet someone by name', done => {
+    it('to greet a stranger', () => {
+      return chai.request(this.app)
+      .get('/api/hello')
+      .then(() => {
+        expect(this.HelloStub).to.have.been.calledWithNew;
+        expect(this.HelloStub).to.have.been.calledWith(undefined);
+        expect(this.greetStub).to.have.been.calledOnce;
+      });
+    });
+  });
+  describe('GET ?name={name}', () => {
+    it('to greet by name', () => {
       const name = 'Bryce';
-      expect(chai.request(this.app)
-        .get('/api/hello')
-        .query({
-          name: name
-        }))
-      .to.eventually.have.status(200)
-      .to.be.json
-      .to.have.property('body', `Hello, ${name}!`)
-      .notify(done);
+      return chai.request(this.app)
+      .get('/api/hello')
+      .query({ name: name })
+      .then(() => {
+        expect(this.HelloStub).to.have.been.calledWithNew;
+        expect(this.HelloStub).to.have.been.calledWith(name);
+        expect(this.greetStub).to.have.been.calledOnce;
+      });
     });
   });
 });

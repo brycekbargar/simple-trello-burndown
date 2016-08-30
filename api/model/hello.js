@@ -5,8 +5,6 @@ function Hello(name) {
   this.name = name || 'stranger';
 }
 
-Hello.prototype.greet = function() {
-  return util.format('Hello, %s!', this.name);
-};
+Hello.greet = (hello) => util.format('Hello, %s!', hello.name);
 
 module.exports = Hello;
