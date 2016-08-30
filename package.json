@@ -41,7 +41,7 @@
     "tbd": "^0.6.4"
   },
   "watch": {
-    "test": {
+    "watch-test": {
       "patterns": [
         "./"
       ],
@@ -51,7 +51,8 @@
     }
   },
   "scripts": {
-    "test": "eslint ./ && istanbul --color cover _mocha || true",
+    "test": "eslint ./ && istanbul --color cover _mocha -- --reporter spec",
+    "watch-test": "eslint ./ && istanbul --color cover _mocha -- --reporter min || true",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",
     "heroku-postbuild": "knex migrate:latest --knexfile ./config/knexfile.js --env production",
