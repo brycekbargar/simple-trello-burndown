@@ -1,6 +1,6 @@
 'use strict';
 
-const CardHistory = require('./../model/cardHistory.js');
+const CardHistory = require('./../model/model.js').CardHistory;
 
 function post(req, res) {
   let updates = req.swagger.params.updates.value;
