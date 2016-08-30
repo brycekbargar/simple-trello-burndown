@@ -2,5 +2,6 @@
 
 module.exports = {
   Hello: require('./hello.js'),
-  CardHistory: require('./cardHistory.js')
+  CardHistory: require('./cardHistory.js'),
+  List: require('./list.js')
 };

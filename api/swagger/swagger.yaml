@@ -88,6 +88,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
         
   /Lists/{listId}:
+    x-swagger-router-controller: listController
     put:
       description: |
         Create or replace the List with the given Id
@@ -125,7 +126,7 @@ paths:
           description: Undefined properties are ignored
           required: true
           schema:
-            $ref: "#/definitions/WriteList"
+            $ref: "#/definitions/UpdateList"
       responses:
         204:
           description: Successfully updated list
@@ -137,6 +138,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
           
   /Lists/:
+    x-swagger-router-controller: listController
     get:
       description: |
         Gets all Lists
@@ -224,21 +226,28 @@ definitions:
       listId:
         type: integer
         format: int32
-  WriteList:
+  UpdateList:
     type: object
     properties:
       name:
         type: string
       status:
         $ref: "#/definitions/Status"
-      displayPosition:
+      order:
         type: integer
         format: int32
         description: The display position of this list
+  WriteList:
+    type: object
+    required: 
+      - name
+      - order
+    allOf: 
+      - $ref: "#/definitions/UpdateList"
   ReadList:
     type: object
     allOf: 
-      - $ref: "#/definitions/WriteList"
+      - $ref: "#/definitions/UpdateList"
       - properties:
           listId:
             type: integer
