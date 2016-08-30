@@ -154,13 +154,14 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
               
-  /Cards/{cardNumber}:
+  /Cards/{cardNo}:
+    x-swagger-router-controller: cardController
     put:
       description: |
         Create or replace the Card with the given Number
       parameters:
         - in: path 
-          name: cardNumber
+          name: cardNo
           required: true
           type: integer
           format: int32
@@ -254,6 +255,8 @@ definitions:
             format: int32
   WriteCard:
     type: object
+    required: 
+      - name
     properties:
-      title:
+      name:
         type: string
