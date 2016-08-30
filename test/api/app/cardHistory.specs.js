@@ -33,7 +33,7 @@ describe('Expect /api/cardHistory', () => {
 
   before('setup server', () => start().then(s => this.app = s.app));
 
-  describe('POST /', () => {
+  describe('/ POST', () => {
     beforeEach('setup cardHistories', () => {
       this.cardHistories = tbd.from({
         listId: 1
@@ -90,7 +90,7 @@ describe('Expect /api/cardHistory', () => {
       .notify(done);
     });
   });
-  describe('GET /', () => {
+  describe('/ GET', () => {
     it('to list the CardHistories', done => {
       const cardHistories = tbd.from({})
         .prop('cardNo').use(tbd.utils.range(1, 156123)).done()
@@ -119,7 +119,7 @@ describe('Expect /api/cardHistory', () => {
       .notify(done);
     });
   });
-  describe('GET /orphans', () => {
+  describe('/orphans GET', () => {
     it('to list the Orphans', done => {
       const cardHistories = tbd.from({})
         .prop('cardNo').use(tbd.utils.range(1, 156123)).done()
