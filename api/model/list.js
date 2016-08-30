@@ -31,4 +31,10 @@ List.update = list => knexFactory().then(knex => knex('lists')
   .where('id', list.id)
   .update(list));
 
+List.list = () => 
+  knexFactory().then(knex => knex
+    .select()
+    .from('lists'))
+    .then(rows => rows.map(r => new List(r)));
+
 module.exports = List;

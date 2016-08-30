@@ -3,6 +3,7 @@ const expect = require('chai')
   .use(require('chai-things'))
   .use(require('chai-as-promised'))
   .expect;
+const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
 
 const knexFactory = require('./../utils/knexFactory.js')();
@@ -105,6 +106,30 @@ describe('Expect List', () => {
         .then(rows => rows[0].count))
       .to.eventually.equal(1)
       .notify(done);
+    });
+  });
+  describe('.list()', () => {
+    it('to return all the lists', done => {
+      const testLists = tbd.from({
+        status: 'qa',
+      })
+      .prop('order').use(tbd.utils.range(156, 456)).done()
+      .prop('name').use(tbd.utils.range(15, 351)).done()
+      .prop('id').use(tbd.utils.range(1, 10000)).done()
+      .make(12);
+
+      expect(
+        this.knex.insert(testLists).into('lists')
+        .then(() => this.List.list())
+        .then(lists => 
+          testLists.every(tl =>
+            lists.find(l => 
+              tl.id === l.id &&
+              tl.status === l.status &&
+              tl.name == l.name &&
+              tl.order === l.order))))
+        .to.eventually.be.true
+        .notify(done);
     });
   });
 });
