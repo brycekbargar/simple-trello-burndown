@@ -1,9 +1,9 @@
 'use strict';
+const restify = require('restify');
 const config = require('./config/config.js');
 
 const web = () => {
   const SwaggerRestify = require('swagger-restify-mw');
-  const restify = require('restify');
   const app = restify.createServer();
 
   return new Promise((resolve, reject) => 
@@ -40,14 +40,11 @@ const scraper = (spec) => {
     swaggerOpts.url = config.swaggerClientUrl;
   }
 
-  return new Promise((resolve, reject) => 
-    new SwaggerClient(swaggerOpts)
-    .then(client => 
-      resolve({
-        client: client,
-        start: () => console.log('starting')
-      }))
-    .catch(reject));
+  return new SwaggerClient(swaggerOpts)
+    .then(client => ({
+      client: client,
+      start: () => require('./workers/scraper.js')(client)
+    }));
 };
 
 module.exports = {

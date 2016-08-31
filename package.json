@@ -19,6 +19,8 @@
   "dependencies": {
     "knex": "^0.11.10",
     "restify": "^4.0.2",
+    "superagent": "^2.2.0",
+    "superagent-suffix": "^0.1.0",
     "swagger-client": "^2.1.18",
     "swagger-restify-mw": "^0.7.0"
   },
