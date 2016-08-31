@@ -1,0 +1,380 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.1",
+        "title": "Simple Trello Burndown"
+    },
+    "basePath": "/api/",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/hello": {
+            "x-swagger-router-controller": "helloController",
+            "get": {
+                "description": "Returns 'Hello' to the caller",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "The name of the person to whom to say hello",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/HelloWorldResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/CardHistory": {
+            "x-swagger-router-controller": "cardHistoryController",
+            "post": {
+                "description": "Snapshots the current list state of the cards\n",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "updates",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WriteCardHistory"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "description": "Gets a list of history of the cards\n",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReadCardHistory"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/CardHistory/Orphans": {
+            "x-swagger-router-controller": "cardHistoryController",
+            "get": {
+                "operationId": "orphans",
+                "description": "Gets a list of the Card Numbers or List Ids we have history for but not the actual item\n",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReadCardHistoryOrphan"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/Lists/{listId}": {
+            "x-swagger-router-controller": "listController",
+            "put": {
+                "description": "Create or replace the List with the given Id\n",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "listId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "body",
+                        "name": "list",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WriteList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created List"
+                    },
+                    "204": {
+                        "description": "Successfully replaced existing List"
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Updates the list with the given id\n",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "listId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "body",
+                        "name": "list",
+                        "description": "Undefined properties are ignored",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successfully updated list"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/Lists/": {
+            "x-swagger-router-controller": "listController",
+            "get": {
+                "description": "Gets all Lists\n",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReadList"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/Cards/{cardNo}": {
+            "x-swagger-router-controller": "cardController",
+            "put": {
+                "description": "Create or replace the Card with the given Number\n",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "cardNo",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "body",
+                        "name": "card",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WriteCard"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created Card"
+                    },
+                    "204": {
+                        "description": "Successfully replaced existing Card"
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "HelloWorldResponse": {
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "ErrorResponse": {
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Status": {
+            "type": "string",
+            "enum": [
+                "backlog",
+                "dev",
+                "qa",
+                "done"
+            ]
+        },
+        "WriteCardHistory": {
+            "type": "object",
+            "properties": {
+                "cardNo": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "listId": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "ReadCardHistory": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "$ref": "#/definitions/Status"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "ReadCardHistoryOrphan": {
+            "type": "object",
+            "description": "Only one of cardNo or listId will be set",
+            "properties": {
+                "cardNo": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "listId": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "UpdateList": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/Status"
+                },
+                "order": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "The display position of this list"
+                }
+            }
+        },
+        "WriteList": {
+            "type": "object",
+            "required": [
+                "name",
+                "order"
+            ],
+            "allOf": [
+                {
+                    "$ref": "#/definitions/UpdateList"
+                }
+            ]
+        },
+        "ReadList": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/UpdateList"
+                },
+                {
+                    "properties": {
+                        "listId": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                }
+            ]
+        },
+        "WriteCard": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
