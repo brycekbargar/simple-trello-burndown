@@ -1,4 +1,12 @@
 language: node_js
-script: 
-    npm test --simple-trello-burndown:reporter=tap
-
+script: npm test --simple-trello-burndown:reporter=tap
+deploy:
+  provider: heroku
+  run: 
+    - "npm ls | grep mysql || npm install mysql"
+    - "node ./node_modules/.bin/knex migrate:latest --knexfile ./config/knexfile.js --env production"
+  app: simple-trello-burndown
+  on:
+    repo: brycekbargar/simple-trello-burndown
+  api_key:
+    secure: V8JR4ql0j7/Ew5e96ldMKYPl0t1jSqXUbumJ6GVaFIEIrpA1yc8G0rKBy2lvl+AX4KZvmiMp/rvAeaP0r1Psyb+40pwy0uEBlDdKszZvB32mfI1Eh5Ero2BU9ie6P1gsNlvYTLlQl4gsroPqcKImtDdF9w3Ajfg/W2pg34QKD7E6ssIXDEFZNvdSaOut98Cx8hiJLVsAT5b9oOlKlP/BXu8jfjAhRoLIJpNEM2ryQSNIdUta2oNnwPUhFSLXOt1CDy/py7/pJRQvAO68U9Y7obMjbm5IUvYkxHIN6HfO/PqiAz+QtKH95A1fj8G2fNWIluNOOd4THk23L6Q6aheLjBd3i0E/8VmmEVKfzKO5HuQkVY0Pca48E2L97wp0Ahr8BWPdam4EsurSyrYrP0Q+C0UiZg6RV1g/fWNoeEdPvJ/d0qu3aSR0fUZ0RrEw8wvWO9w+7cz46fEDeo0O2Vvvd3t8GYVbgL1jRAezip3g2E97BTFmVKQhZnPtALTezrH3MuKN7hUqbMkF2in7BzhOCVvEGDNmnhq64RmkGz1NamzMxuGwNSvdnA50koEunDeQcQ9BGmER2xrLZ2pT0VmN858Bkz9aOLv7OR8Y84JF5tb9vb405waTkkLdKBT4wuwsGmwNle/OkmiEGRJdzwGm7jhLiqBgwnSvfdHtNlCCuA0=
