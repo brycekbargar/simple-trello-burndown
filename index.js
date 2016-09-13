@@ -43,7 +43,7 @@ const scraper = (spec) => {
   return new SwaggerClient(swaggerOpts)
     .then(client => ({
       client: client,
-      start: () => require('./workers/scraper.js')(client)
+      start: () => require('./workers/scraper/index.js')(client)
     }));
 };
 
