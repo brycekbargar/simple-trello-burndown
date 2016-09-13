@@ -1,4 +1,4 @@
-const expect = require('chai').expect;
+const expect = require('./../../chai.js').expect;
 const superagent = require('superagent');
 const mock = require('superagent-mocker')(superagent);
 const proxyquire = require('proxyquire').noCallThru();
@@ -18,10 +18,15 @@ describe('Expect CardHistory', () => {
     this.CardHistory = proxyquire('./../../../workers/scraper/model/cardHistory.js', this.proxyquireStubs);
   });
   describe('.list()', () => {
-    it('to grab the card histories from trello', done => {
+    beforeEach('setup trello api', () => {
       mock.get(`/boards/${this.config.trelloBoard}/cards`, () => {
         return { a: 5 };
       });
+    });
+    afterEach('teardown trello api', () => {
+      mock.clearRoutes();
+    });
+    it('to grab the card histories from trello', done => {
       this.CardHistory.list()
         .then(() => {
           expect(true).to.be.ok;

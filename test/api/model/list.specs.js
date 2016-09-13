@@ -1,9 +1,9 @@
 'use strict';
-const expect = require('./../utils/chai.js').expect;
+const expect = require('./../../chai.js').expect;
 const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
 
-const knexFactory = require('./../utils/knexFactory.js')();
+const knexFactory = require('./../knexFactory.js')();
 
 describe('Expect List', () => {
   beforeEach('setup proxyquire', () => this.proxyquireStubs = {});

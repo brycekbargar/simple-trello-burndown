@@ -1,5 +1,5 @@
 'use strict';
-const chai = require('./../utils/chai.js');
+const chai = require('./../../chai.js');
 const expect = chai.expect;
 const sinon = require('sinon');
 require('sinon-as-promised');
