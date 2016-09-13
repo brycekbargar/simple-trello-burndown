@@ -3,14 +3,7 @@ const superagent = require('superagent');
 const mock = require('superagent-mocker')(superagent);
 const proxyquire = require('proxyquire').noCallThru();
 
-describe('Expect scraper', () => {
-  beforeEach('setup client', done => {
-    require('./../../index.js').scraper(require('./../../api/swagger/swagger.json'))
-      .then(s => {
-        this.client = s.client;
-        done();
-      });
-  });
+describe('Expect CardHistory', () => {
   beforeEach('setup spies', () => {
     this.proxyquireStubs = {
       'superagent': superagent,
@@ -21,15 +14,15 @@ describe('Expect scraper', () => {
       }
     };
   });
-  beforeEach('setup scraper', () => {
-    this.start = proxyquire('./../../workers/scraper.js', this.proxyquireStubs);
+  beforeEach('setup model', () => {
+    this.CardHistory = proxyquire('./../../../workers/scraper/model/cardHistory.js', this.proxyquireStubs);
   });
-  describe('#start()', () => {
+  describe('.list()', () => {
     it('to grab the card histories from trello', done => {
       mock.get(`/boards/${this.config.trelloBoard}/cards`, () => {
         return { a: 5 };
       });
-      this.start(this.client)
+      this.CardHistory.list()
         .then(() => {
           expect(true).to.be.ok;
           done();

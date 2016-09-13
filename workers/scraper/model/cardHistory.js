@@ -6,8 +6,11 @@ const auth = {
   token: config.trelloToken
 };
 
-module.exports = () => {
-  return new Promise((resolve, reject) => {
+function CardHistory () {
+}
+
+CardHistory.list = () =>
+  new Promise((resolve, reject) => {
     trello
     .get(`/boards/${config.trelloBoard}/cards`)
     .query(Object.assign({}, auth, {
@@ -22,4 +25,5 @@ module.exports = () => {
       resolve(res);
     });
   });
-};
+
+module.exports = CardHistory;
