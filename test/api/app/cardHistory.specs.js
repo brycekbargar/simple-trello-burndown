@@ -8,7 +8,7 @@ const tbd = require('tbd');
 const model = require('./../../../api/model/model.js');
 const start = require('./../../../index.js').web;
 
-describe('Expect /api/cardHistory', () => {
+describe('[Web] Expect /api/cardHistory', () => {
   before('setup spies', () => {
     this.CardHistorySpy = sinon.spy(model, 'CardHistory');
     this.bulkCreateStub = sinon.stub(model.CardHistory, 'bulkCreate');

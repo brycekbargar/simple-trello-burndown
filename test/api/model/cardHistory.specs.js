@@ -5,7 +5,7 @@ const proxyquire = require('proxyquire').noCallThru();
 
 const knexFactory = require('./../knexFactory.js')();
 
-describe('Expect CardHistory', () => {
+describe('[Web] Expect CardHistory', () => {
   beforeEach('setup proxyquire', () => this.proxyquireStubs = {});
 
   beforeEach('setup knex', () => knexFactory(this));

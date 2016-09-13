@@ -8,7 +8,7 @@ const tbd = require('tbd');
 const model = require('./../../../api/model/model.js');
 const start = require('./../../../index.js').web;
 
-describe('Expect /api/lists', () => {
+describe('[Web] Expect /api/lists', () => {
   before('setup spies', () => {
     this.ListSpy = sinon.spy(model, 'List');
     this.createOrReplaceStub = sinon.stub(model.List, 'createOrReplace');

@@ -7,7 +7,7 @@ require('sinon-as-promised');
 const model = require('./../../../api/model/model.js');
 const start = require('./../../../index.js').web;
 
-describe('Expect /api/cards', () => {
+describe('[Web] Expect /api/cards', () => {
   before('setup spies', () => {
     this.CardSpy = sinon.spy(model, 'Card');
     this.createOrReplaceStub = sinon.stub(model.Card, 'createOrReplace');

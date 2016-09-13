@@ -3,7 +3,7 @@ const superagent = require('superagent');
 const mock = require('superagent-mocker')(superagent);
 const proxyquire = require('proxyquire').noCallThru();
 
-describe('Expect CardHistory', () => {
+describe('[Scraper] Expect CardHistory', () => {
   beforeEach('setup spies', () => {
     this.proxyquireStubs = {
       'superagent': superagent,
