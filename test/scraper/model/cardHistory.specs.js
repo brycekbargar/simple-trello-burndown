@@ -1,6 +1,7 @@
 const expect = require('./../../chai.js').expect;
 const superagent = require('superagent');
 const mock = require('superagent-mocker')(superagent);
+const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
 
 describe('[Scraper] Expect CardHistory', () => {
@@ -8,9 +9,12 @@ describe('[Scraper] Expect CardHistory', () => {
     this.proxyquireStubs = {
       'superagent': superagent,
       './../config/config.js': this.config = {
-        trelloKey: 'Pecan',
-        trelloToken: 'Waffles',
-        trelloBoard: 'trnaei15612itnaruyn'
+        trello: {
+          key: 'Pecan',
+          token: 'Waffles',
+          board: 'trnaei15612itnaruyn',
+          label: 'nteisroanteirsao'
+        }
       }
     };
   });
@@ -18,24 +22,44 @@ describe('[Scraper] Expect CardHistory', () => {
     this.CardHistory = proxyquire('./../../../workers/scraper/model/cardHistory.js', this.proxyquireStubs);
   });
   describe('.list()', () => {
-    beforeEach('setup trello api', () => {
-      mock.get(`/boards/${this.config.trelloBoard}/cards`, () => {
-        return { a: 5 };
-      });
-    });
     afterEach('teardown trello api', () => {
       mock.clearRoutes();
     });
-    it('to grab the card histories from trello', done => {
-      this.CardHistory.list()
-        .then(() => {
-          expect(true).to.be.ok;
-          done();
-        })
-        .catch(() => {
-          expect(false).to.be.ok;
-          done();
-        });
+    it('to only return CardHistories that have the configured label', done => {
+      const labels = [
+        ['atnseraio', '156231'], 
+        ['tneia156123', this.config.trello.label], 
+        ['atnseraio', 'nuytsnreiao'], 
+        ['nuynei1561ei', this.config.trello.label || '156231', 'ntuyranei'], 
+        [], 
+        [this.config.trello.label || 'tnrsy']
+      ];
+      const cardHistories = tbd.from({
+        id: '573dae4684a6c99302523096'
+      })
+      .prop('idShort').use(tbd.utils.range(1, 156123)).done()
+      .prop('idList').use(tbd.utils.random('atnseraio', '156231', 'tneia156123')).done()
+      .make(labels.length)
+      .map((t, i) => Object.assign({}, t, { idLabels: labels[i] }));
+
+      mock.get(`/boards/${this.config.trello.board}/cards`, () => {
+        return {
+          body: cardHistories
+        };
+      });
+      expect(this.CardHistory.list())
+      .to.eventually.be.fulfilled
+      .to.eventually.have.length(3)
+      .notify(done);
+    });
+    it('to pass-through errors', done => {
+      const error = new Error('BLAAAARGH');
+      mock.get(`/boards/${this.config.trello.board}/cards`, () => {
+        throw error;
+      });
+      expect(this.CardHistory.list())
+      .to.eventually.be.rejectedWith(error)
+      .notify(done);
     });
   });
 });
