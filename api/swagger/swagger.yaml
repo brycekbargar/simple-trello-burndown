@@ -96,8 +96,9 @@ paths:
         - in: path 
           name: listId
           required: true
-          type: integer
-          format: int32
+          type: string
+          maxLength: 36
+          format: uuid
         - in: body 
           name: list
           required: true
@@ -119,8 +120,9 @@ paths:
         - in: path 
           name: listId
           required: true
-          type: integer
-          format: int32
+          maxLength: 36
+          type: string
+          format: uuid
         - in: body 
           name: list
           description: Undefined properties are ignored
@@ -207,8 +209,9 @@ definitions:
         type: integer
         format: int32
       listId: 
-        type: integer
-        format: int32
+        type: string
+        maxLength: 36
+        format: uuid
   ReadCardHistory:
     type: object
     properties:
@@ -225,8 +228,9 @@ definitions:
         type: integer
         format: int32
       listId:
-        type: integer
-        format: int32
+        type: string
+        maxLength: 36
+        format: uuid
   UpdateList:
     type: object
     properties:
@@ -251,8 +255,9 @@ definitions:
       - $ref: "#/definitions/UpdateList"
       - properties:
           listId:
-            type: integer
-            format: int32
+            type: string
+            maxLength: 36
+            format: uuid
   WriteCard:
     type: object
     required: 

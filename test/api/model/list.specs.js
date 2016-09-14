@@ -17,7 +17,7 @@ describe('[Web] Expect List', () => {
 
   beforeEach('setup test list', () => {
     this.testList = {
-      id: 5,
+      id: '4eea4ffc91e31d174600004a',
       name: 'Test List',
       order: 7,
       status: 'qa'
@@ -27,7 +27,7 @@ describe('[Web] Expect List', () => {
 
   describe('.createOrReplace()', () => {
     it('to return true for new rows', done => {
-      this.testList.id = 156;
+      this.testList.id = '12344ffc91e31d174600004a';
       expect(this.List.createOrReplace(this.testList))
       .to.eventually.be.true
       .notify(done);
@@ -49,7 +49,7 @@ describe('[Web] Expect List', () => {
       .notify(done);
     });
     it('to save new rows', done => {
-      this.testList.id = 156213;
+      this.testList.id = '12344ffc91e31d174600004a';
       expect(
         this.List
         .createOrReplace(this.testList)
@@ -112,7 +112,7 @@ describe('[Web] Expect List', () => {
       });
       it('the list was not found', done => {
         const list = new this.List({
-          id: 1564231
+          id: '12344ffc91e31d174600004a'
         });
         expect(this.List.update(list))
         .to.eventually.be.false
@@ -137,7 +137,7 @@ describe('[Web] Expect List', () => {
         .then(lists => 
           testLists.every(tl =>
             lists.find(l => 
-              tl.id === l.id &&
+              tl.id == l.id &&
               tl.status === l.status &&
               tl.name == l.name &&
               tl.order === l.order))))

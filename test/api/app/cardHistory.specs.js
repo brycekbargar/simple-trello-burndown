@@ -36,7 +36,7 @@ describe('[Web] Expect /api/cardHistory', () => {
   describe('/ POST', () => {
     beforeEach('setup cardHistories', () => {
       this.cardHistories = tbd.from({
-        listId: 1
+        listId: '4eea4ffc91e31d174600004a'
       })
       .prop('cardNo').use(tbd.utils.range(1, 1563316)).done()
       .make(15);
@@ -94,7 +94,11 @@ describe('[Web] Expect /api/cardHistory', () => {
     it('to list the CardHistories', done => {
       const cardHistories = tbd.from({})
         .prop('cardNo').use(tbd.utils.range(1, 156123)).done()
-        .prop('listId').use(tbd.utils.range(1, 7812)).done()
+        .prop('listId').use(tbd.utils.random(
+          '4eea4ffc91e31d174600004a',
+          'afen564331e31d174600004a',
+          'afen564bc4531d174600004a'
+        )).done()
         .make(4)
         .map(ch => new model.CardHistory(ch));
       this.listStub.resolves(cardHistories);

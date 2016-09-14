@@ -128,8 +128,9 @@
                         "in": "path",
                         "name": "listId",
                         "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+			"maxLength": 36,
+                        "format": "uuid"
                     },
                     {
                         "in": "body",
@@ -162,8 +163,9 @@
                         "in": "path",
                         "name": "listId",
                         "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string",
+			"maxLength": 36,
+                        "format": "uuid"
                     },
                     {
                         "in": "body",
@@ -316,8 +318,9 @@
                     "format": "int32"
                 },
                 "listId": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string",
+		    "maxLength": 36,
+                    "format": "uuid"
                 }
             }
         },
@@ -358,8 +361,9 @@
                 {
                     "properties": {
                         "listId": {
-                            "type": "integer",
-                            "format": "int32"
+                            "type": "string",
+			    "maxLength": 36,
+                            "format": "uuid"
                         }
                     }
                 }

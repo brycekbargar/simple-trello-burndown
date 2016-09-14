@@ -19,7 +19,12 @@ describe('[Web] Expect CardHistory', () => {
     it('to insert the given CardHistories', done => {
       const cardHistories = tbd.from({})
       .prop('cardNo').use(tbd.utils.range(1, 10000)).done()
-      .prop('listId').use(tbd.utils.range(1, 10000)).done()
+      .prop('listId').use(tbd.utils.random(
+        '4eea4ffc91e31d174600004a',
+        '4eea4ffcafebcda74600004a',
+        'l5623ffc91e31d174600004a',
+        '4eea4ffc91e31d1745623145'
+      )).done()
       .make(tbd.utils.range(5, 10)());
 
       expect(
@@ -38,7 +43,12 @@ describe('[Web] Expect CardHistory', () => {
     it('to not perform partial inserts', done => {
       const cardHistories = tbd.from({})
       .prop('cardNo').use(tbd.utils.range(1, 10000)).done()
-      .prop('listId').use(tbd.utils.range(1, 10000)).done()
+      .prop('listId').use(tbd.utils.random(
+        '4eea4ffc91e31d174600004a',
+        '4eea4ffcafebcda74600004a',
+        'l5623ffc91e31d174600004a',
+        '4eea4ffc91e31d1745623145'
+      )).done()
       .make(5)
       .map(x => new this.CardHistory(x));
 
@@ -55,7 +65,7 @@ describe('[Web] Expect CardHistory', () => {
     it('to not not allow duplicates', done => {
       const cardHistories = tbd.from({
         cardNo: 1,
-        listId: 1
+        listId: '4eea4ffc91e31d174600004a'
       })
       .make(2)
       .map(x => new this.CardHistory(x));
@@ -126,7 +136,7 @@ describe('[Web] Expect CardHistory', () => {
       .then(() => expect(this.CardHistory.listOrphans())
         .to.eventually.have.length(2)
         .and.to.eventually.all.be.an.instanceOf(this.CardHistory)
-        .and.to.eventually.include({listId: 11})
+        .and.to.eventually.include({listId: '11'})
         .and.to.eventually.include({cardNo: 9})
         .notify(done))
       .catch(done);

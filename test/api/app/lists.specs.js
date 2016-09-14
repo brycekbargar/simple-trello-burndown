@@ -39,7 +39,7 @@ describe('[Web] Expect /api/lists', () => {
         order: 15644,
         name: 'Blueberry Scone'
       };
-      this.listId = 456123;
+      this.listId = '4eea4ffc91e31d174600004a';
     });
     it('to report creating a new list', done => {
       this.createOrReplaceStub.resolves(true);
@@ -101,7 +101,7 @@ describe('[Web] Expect /api/lists', () => {
       this.list = {
         status: 'dev'
       };
-      this.listId = 456123;
+      this.listId = '4eea4ffc91e31d174600004a';
     });
     it('to update the list', done => {
       this.updateStub.resolves(true);

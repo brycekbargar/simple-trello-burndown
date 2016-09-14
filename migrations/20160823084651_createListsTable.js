@@ -7,7 +7,7 @@ const status = 'status';
 module.exports  = {
   up: knex => 
     knex.schema.createTable(lists, table => {
-      table.integer(id).primary();
+      table.uuid(id).primary();
       table.string(name, 16384).notNullable();
       table.integer(order).notNullable();
       table.enum(status, [
