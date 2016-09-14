@@ -31,4 +31,11 @@ CardHistory.scrapeTrello = () =>
     });
   });
 
+CardHistory.upload = (client, cardHistories) => 
+  client.apis.default.post_CardHistory({
+    body: {
+      updates: cardHistories
+    }
+  });
+
 module.exports = CardHistory;

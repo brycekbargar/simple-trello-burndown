@@ -1,3 +1,5 @@
+const stub = require('sinon').stub;
+require('sinon-as-promised');
 const expect = require('./../../chai.js').expect;
 const superagent = require('superagent');
 const mock = require('superagent-mocker')(superagent);
@@ -61,6 +63,44 @@ describe('[Scraper] Expect CardHistory', () => {
         throw error;
       });
       expect(this.CardHistory.scrapeTrello())
+      .to.eventually.be.rejectedWith(error)
+      .notify(done);
+    });
+  });
+
+  describe('.upload()', () => {
+    beforeEach('setup client', done => {
+      require('./../../../index.js').scraper(require('./../../../api/swagger/swagger.json'))
+      .then(s => {
+        this.client = s.client;
+        done();
+      });
+    });
+    beforeEach('setup spies', () => {
+      this.postStub = stub(this.client.apis.default, 'post_CardHistory');
+    });
+    afterEach('teardown spies', () => {
+      this.postStub.restore();
+    });
+    it('to upload the cardHistories', done => {
+      const cardHistories = tbd.from({}).make(3).map(ch => new this.CardHistory(ch));
+      this.postStub.resolves();
+      this.CardHistory.upload(this.client, cardHistories)
+        .then(() => {
+          expect(this.postStub).to.have.been.calledOnce;
+          expect(this.postStub).to.have.been.calledWith({
+            body: {
+              updates: cardHistories
+            }
+          });
+          done();
+        })
+        .catch(done);
+    });
+    it('to pass-through errors', done => {
+      const error = new Error('BLAAAARGH');
+      this.postStub.rejects(error);
+      expect(this.CardHistory.upload(this.client, []))
       .to.eventually.be.rejectedWith(error)
       .notify(done);
     });
