@@ -23,6 +23,21 @@ describe('[Scraper] Expect CardHistory', () => {
   beforeEach('setup model', () => {
     this.CardHistory = proxyquire('./../../../workers/scraper/model/cardHistory.js', this.proxyquireStubs);
   });
+  beforeEach('setup client', done => {
+    require('./../../../index.js').scraper(require('./../../../api/swagger/swagger.json'))
+    .then(s => {
+      this.client = s.client;
+      done();
+    });
+  });
+  beforeEach('setup spies', () => {
+    this.postStub = stub(this.client.apis.default, 'post_CardHistory');
+    this.orphansStub = stub(this.client.apis.default, 'orphans');
+  });
+  afterEach('teardown spies', () => {
+    this.postStub.restore();
+    this.orphansStub.restore();
+  });
   describe('.scrapeTrello()', () => {
     afterEach('teardown trello api', () => {
       mock.clearRoutes();
@@ -69,19 +84,6 @@ describe('[Scraper] Expect CardHistory', () => {
   });
 
   describe('.upload()', () => {
-    beforeEach('setup client', done => {
-      require('./../../../index.js').scraper(require('./../../../api/swagger/swagger.json'))
-      .then(s => {
-        this.client = s.client;
-        done();
-      });
-    });
-    beforeEach('setup spies', () => {
-      this.postStub = stub(this.client.apis.default, 'post_CardHistory');
-    });
-    afterEach('teardown spies', () => {
-      this.postStub.restore();
-    });
     it('to upload the cardHistories', done => {
       const cardHistories = tbd.from({}).make(3).map(ch => new this.CardHistory(ch));
       this.postStub.resolves();
@@ -101,6 +103,30 @@ describe('[Scraper] Expect CardHistory', () => {
       const error = new Error('BLAAAARGH');
       this.postStub.rejects(error);
       expect(this.CardHistory.upload(this.client, []))
+      .to.eventually.be.rejectedWith(error)
+      .notify(done);
+    });
+  });
+
+  describe('.listOrphans()', () => {
+    it('to list the orphans', done => {
+      const orphans = tbd.from({})
+        .prop('cardNo').use(tbd.utils.range(1, 1563)).done()
+        .make(7)
+        .concat(tbd.from({})
+        .prop('listId').use(tbd.utils.range(1, 456321)).done()
+        .make(3));
+      this.orphansStub.resolves(orphans);
+      expect(this.CardHistory.listOrphans(this.client))
+      .to.eventually.be.fulfilled
+      .and.to.eventually.have.length(orphans.length)
+      .and.to.eventually.all.be.an.instanceOf(this.CardHistory)
+      .notify(done);
+    });
+    it('to pass-through errors', done => {
+      const error = new Error('BLAAAARGH');
+      this.orphansStub.rejects(error);
+      expect(this.CardHistory.listOrphans(this.client))
       .to.eventually.be.rejectedWith(error)
       .notify(done);
     });
