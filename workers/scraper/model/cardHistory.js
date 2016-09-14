@@ -1,6 +1,6 @@
 const trello = require('superagent');
 const trelloApi = require('superagent-prefix')('https://api.trello.com/1');
-const config = require('./../config/config.js');
+const config = require('./../../../config/config.js');
 const auth = {
   key: config.trello.key,
   token: config.trello.token
@@ -33,9 +33,7 @@ CardHistory.scrapeTrello = () =>
 
 CardHistory.upload = (client, cardHistories) => 
   client.apis.default.post_CardHistory({
-    body: {
-      updates: cardHistories
-    }
+    updates: cardHistories
   });
 
 CardHistory.listOrphans = client => 

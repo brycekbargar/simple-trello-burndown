@@ -10,7 +10,7 @@ describe('[Scraper] Expect CardHistory', () => {
   beforeEach('setup spies', () => {
     this.proxyquireStubs = {
       'superagent': superagent,
-      './../config/config.js': this.config = {
+      './../../../config/config.js': this.config = {
         trello: {
           key: 'Pecan',
           token: 'Waffles',
@@ -91,9 +91,7 @@ describe('[Scraper] Expect CardHistory', () => {
         .then(() => {
           expect(this.postStub).to.have.been.calledOnce;
           expect(this.postStub).to.have.been.calledWith({
-            body: {
-              updates: cardHistories
-            }
+            updates: cardHistories
           });
           done();
         })
