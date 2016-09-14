@@ -114,7 +114,7 @@ describe('[Scraper] Expect CardHistory', () => {
         .concat(tbd.from({})
         .prop('listId').use(tbd.utils.range(1, 456321)).done()
         .make(3));
-      this.orphansStub.resolves(orphans);
+      this.orphansStub.resolves({ obj: orphans });
       expect(this.CardHistory.listOrphans(this.client))
       .to.eventually.be.fulfilled
       .and.to.eventually.have.length(orphans.length)

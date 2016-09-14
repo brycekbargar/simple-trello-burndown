@@ -37,7 +37,8 @@ CardHistory.upload = (client, cardHistories) =>
   });
 
 CardHistory.listOrphans = client => 
-  client.apis.default.orphans()
+  client.apis.default.orphans({})
+  .then(res => res.obj)
   .then(orphans => orphans.map(o => new CardHistory(o)));
 
 module.exports = CardHistory;
