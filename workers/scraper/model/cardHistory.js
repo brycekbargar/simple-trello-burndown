@@ -6,10 +6,12 @@ const auth = {
   token: config.trello.token
 };
 
-function CardHistory () {
+function CardHistory (data) {
+  if(data.idShort) { this.cardNo = data.idShort; }
+  if(data.idList) { this.listId = data.idList; }
 }
 
-CardHistory.list = () =>
+CardHistory.scrapeTrello = () =>
   new Promise((resolve, reject) => {
     trello
     .get(`/boards/${config.trello.board}/cards`)
@@ -23,8 +25,9 @@ CardHistory.list = () =>
         reject(err);
         return;
       }
-      resolve(res.body.filter(ch => 
-        ch.idLabels.some(l => l === config.trello.label)));
+      resolve(res.body
+        .filter(ch => ch.idLabels.some(l => l === config.trello.label))
+        .map(ch => new CardHistory(ch)));
     });
   });
 

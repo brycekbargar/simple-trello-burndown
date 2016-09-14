@@ -21,7 +21,7 @@ describe('[Scraper] Expect CardHistory', () => {
   beforeEach('setup model', () => {
     this.CardHistory = proxyquire('./../../../workers/scraper/model/cardHistory.js', this.proxyquireStubs);
   });
-  describe('.list()', () => {
+  describe('.scrapeTrello()', () => {
     afterEach('teardown trello api', () => {
       mock.clearRoutes();
     });
@@ -30,9 +30,9 @@ describe('[Scraper] Expect CardHistory', () => {
         ['atnseraio', '156231'], 
         ['tneia156123', this.config.trello.label], 
         ['atnseraio', 'nuytsnreiao'], 
-        ['nuynei1561ei', this.config.trello.label || '156231', 'ntuyranei'], 
+        ['nuynei1561ei', this.config.trello.label, 'ntuyranei'], 
         [], 
-        [this.config.trello.label || 'tnrsy']
+        [this.config.trello.label]
       ];
       const cardHistories = tbd.from({
         id: '573dae4684a6c99302523096'
@@ -47,9 +47,12 @@ describe('[Scraper] Expect CardHistory', () => {
           body: cardHistories
         };
       });
-      expect(this.CardHistory.list())
+      expect(this.CardHistory.scrapeTrello())
       .to.eventually.be.fulfilled
-      .to.eventually.have.length(3)
+      .and.to.eventually.have.length(3)
+      .and.to.eventually.all.be.an.instanceOf(this.CardHistory)
+      .and.to.eventually.all.have.property('cardNo')
+      .and.also.to.eventually.all.have.property('listId')
       .notify(done);
     });
     it('to pass-through errors', done => {
@@ -57,7 +60,7 @@ describe('[Scraper] Expect CardHistory', () => {
       mock.get(`/boards/${this.config.trello.board}/cards`, () => {
         throw error;
       });
-      expect(this.CardHistory.list())
+      expect(this.CardHistory.scrapeTrello())
       .to.eventually.be.rejectedWith(error)
       .notify(done);
     });
