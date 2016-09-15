@@ -8,7 +8,10 @@ const auth = {
 
 function CardHistory (data) {
   if(data.idShort) { this.cardNo = data.idShort; }
+  if(data.cardNo) { this.cardNo = data.cardNo; }
+
   if(data.idList) { this.listId = data.idList; }
+  if(data.listId) { this.listId = data.listId; }
 }
 
 CardHistory.scrapeTrello = () =>
