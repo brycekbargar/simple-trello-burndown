@@ -8,14 +8,15 @@ const auth = {
 
 function Card (data) {
   if(data.name) { this.name = data.name; }
+  if(data.idShort) { this.no = data.idShort; }
 }
 
-Card.getFromTrello = cardNo =>
+Card.getFromTrello = link =>
   new Promise((resolve, reject) => {
     trello
-    .get(`/Cards/${cardNo}`)
+    .get(`/Cards/${link}`)
     .query(Object.assign({}, auth, {
-      fields: 'name'
+      fields: 'name,idShort'
     }))
     .use(trelloApi)
     .accept('application/json')
@@ -28,9 +29,9 @@ Card.getFromTrello = cardNo =>
     });
   });
 
-Card.upload = (client, card, cardNo) => 
-  client.apis.default.put_Cards_cardNo({
-    cardNo: cardNo,
+Card.upload = (client, card, link) => 
+  client.apis.default.put_Cards_link({
+    link: link,
     card: card
   });
 

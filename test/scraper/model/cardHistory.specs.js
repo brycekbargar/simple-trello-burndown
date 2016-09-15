@@ -54,7 +54,7 @@ describe('[Scraper] Expect CardHistory', () => {
       const cardHistories = tbd.from({
         id: '573dae4684a6c99302523096'
       })
-      .prop('idShort').use(tbd.utils.range(1, 156123)).done()
+      .prop('shortLink').use(tbd.utils.range(1, 156123)).done()
       .prop('idList').use(tbd.utils.random('atnseraio', '156231', 'tneia156123')).done()
       .make(labels.length)
       .map((t, i) => Object.assign({}, t, { idLabels: labels[i] }));
@@ -68,7 +68,7 @@ describe('[Scraper] Expect CardHistory', () => {
       .to.eventually.be.fulfilled
       .and.to.eventually.have.length(3)
       .and.to.eventually.all.be.an.instanceOf(this.CardHistory)
-      .and.to.eventually.all.have.property('cardNo')
+      .and.to.eventually.all.have.property('cardLink')
       .and.also.to.eventually.all.have.property('listId')
       .notify(done);
     });

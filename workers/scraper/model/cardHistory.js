@@ -7,8 +7,8 @@ const auth = {
 };
 
 function CardHistory (data) {
-  if(data.idShort) { this.cardNo = data.idShort; }
-  if(data.cardNo) { this.cardNo = data.cardNo; }
+  if(data.shortLink) { this.cardLink = data.shortLink; }
+  if(data.cardLink) { this.cardLink = data.cardLink; }
 
   if(data.idList) { this.listId = data.idList; }
   if(data.listId) { this.listId = data.listId; }
@@ -19,7 +19,7 @@ CardHistory.scrapeTrello = () =>
     trello
     .get(`/boards/${config.trello.board}/cards`)
     .query(Object.assign({}, auth, {
-      fields: 'idShort,idLabels,idList'
+      fields: 'idLabels,idList,shortLink'
     }))
     .use(trelloApi)
     .accept('application/json')

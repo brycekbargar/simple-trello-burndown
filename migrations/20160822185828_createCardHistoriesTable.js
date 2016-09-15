@@ -6,7 +6,7 @@ const created_at = 'created_at';
 module.exports = {
   up: knex =>
     knex.schema.createTable(card_histories, table => {
-      table.integer(card_link).notNullable();
+      table.string(card_link, 8).notNullable();
       table.uuid(list_id).notNullable();
       table.timestamp(created_at).defaultTo(knex.fn.now());
       table.unique([card_link, list_id, created_at]);

@@ -13,9 +13,9 @@ module.exports = client =>
         List.getFromTrello(list.listId)
         .then(l => List.upload(client, l, list.listId)))),
     Promise.all(
-      orphans.filter(o => o.cardNo != null)
+      orphans.filter(o => o.cardLink != null)
       .map(card => 
-        Card.getFromTrello(card.cardNo)
-        .then(c => Card.upload(client, c, card.cardNo))))
+        Card.getFromTrello(card.cardLink)
+        .then(c => Card.upload(client, c, card.cardLink))))
   ]));
 

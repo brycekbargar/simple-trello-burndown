@@ -35,7 +35,7 @@ describe('[Web] Expect CardHistory', () => {
             cardHistories.every(ch => 
               rows.find(r => 
                 !!r.created_at &&
-                r.card_link === ch.cardLink &&
+                r.card_link == ch.cardLink &&
                 r.list_id === ch.listId))))
       .to.eventually.be.true
       .notify(done); 
@@ -138,7 +138,7 @@ describe('[Web] Expect CardHistory', () => {
         .to.eventually.have.length(2)
         .and.to.eventually.all.be.an.instanceOf(this.CardHistory)
         .and.to.eventually.include({listId: '11'})
-        .and.to.eventually.include({cardLink: 9})
+        .and.to.eventually.include({cardLink: '9'})
         .notify(done))
       .catch(done);
     });
