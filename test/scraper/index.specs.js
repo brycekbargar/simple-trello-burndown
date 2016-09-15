@@ -22,7 +22,7 @@ describe('[Scraper] Expect scraper', () => {
     const cardHistories = tbd.from({}).make(7).map(ch => new CardHistory(ch));
     this.scrapeTrelloStub.resolves(cardHistories);
     this.uploadStub.resolves();
-    this.orphansStub.resolves();
+    this.orphansStub.resolves([]);
     scraper(client)
       .then(() => {
         expect(this.scrapeTrelloStub).to.have.been.calledOnce;
