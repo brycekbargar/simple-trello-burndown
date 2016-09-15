@@ -16,16 +16,16 @@ describe('[Web] Expect Card', () => {
 
   beforeEach('setup test card', () => {
     this.testCard = {
-      no: 5,
+      link: 'tp8KCEpi',
       name: 'Test Card',
-      link: 'tp8KCEpi'
+      no: 5
     };
     return this.knex.insert(this.testCard).into('cards');
   });
 
   describe('.createOrReplace()', () => {
     it('to return true for new rows', done => {
-      this.testCard.no = 156;
+      this.testCard.link = 'nuytraon';
       expect(this.Card.createOrReplace(this.testCard))
       .to.eventually.be.true
       .notify(done);
@@ -37,35 +37,35 @@ describe('[Web] Expect Card', () => {
     });
 
     it('to save new rows', done => {
-      this.testCard.no = 156213;
+      this.testCard.link = '456aeiro';
       expect(
         this.Card
         .createOrReplace(this.testCard)
-        .then(() => this.knex.count('no as count').from('cards').where(this.testCard))
+        .then(() => this.knex.count('link as count').from('cards').where(this.testCard))
         .then(rows => rows[0].count))
       .to.eventually.equal(1)
       .notify(done);
     });
     it('to replace rows', done => {
       const updatedCard = {
-        no: this.testCard.no,
+        link: this.testCard.link,
         name: 'A new name',
-        link: 'tp98Cvpi'
+        no: 7
       };
       expect(
         this.Card.createOrReplace(updatedCard)
-        .then(() => this.knex.count('no as count').from('cards').where(updatedCard))
+        .then(() => this.knex.count('link as count').from('cards').where(updatedCard))
         .then(rows => rows[0].count))
       .to.eventually.equal(1)
       .notify(done);
     });
     it('to not partially replace', done => {
       const updatedCard = {
-        no: this.testCard.no,
+        link: this.testCard.link
       };
       expect(
         this.Card.createOrReplace(updatedCard)
-        .catch(() => this.knex.count('no as count').from('cards').where(this.testCard))
+        .catch(() => this.knex.count('link as count').from('cards').where(this.testCard))
         .then(rows => rows[0].count))
       .to.eventually.equal(1)
       .notify(done);

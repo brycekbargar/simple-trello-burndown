@@ -38,8 +38,15 @@ describe('[Web] Expect /api/cardHistory', () => {
       this.cardHistories = tbd.from({
         listId: '4eea4ffc91e31d174600004a'
       })
-      .prop('cardNo').use(tbd.utils.range(1, 1563316)).done()
-      .make(15);
+      .prop('cardLink').use(tbd.utils.random(
+        'neits',
+        'ntuyr',
+        'wluy',
+        'tnuya',
+        'enaro',
+        '156ietna',
+        '123ao')).done()
+      .make(7);
     });
     it('with valid data to be ok', done => {
       this.bulkCreateStub.resolves();
@@ -73,7 +80,7 @@ describe('[Web] Expect /api/cardHistory', () => {
           expect(this.cardHistories
             .every(ch => this.bulkCreateStub.args[0][0]
               .find(c => 
-                c.card_no === ch.cardNo &&
+                c.card_link == ch.cardLink &&
                 c.list_id === ch.listId)))
           .to.be.true;
         });
@@ -93,7 +100,7 @@ describe('[Web] Expect /api/cardHistory', () => {
   describe('/ GET', () => {
     it('to list the CardHistories', done => {
       const cardHistories = tbd.from({})
-        .prop('cardNo').use(tbd.utils.range(1, 156123)).done()
+        .prop('cardLink').use(tbd.utils.range(1, 156123)).done()
         .prop('listId').use(tbd.utils.random(
           '4eea4ffc91e31d174600004a',
           'afen564331e31d174600004a',
@@ -107,7 +114,7 @@ describe('[Web] Expect /api/cardHistory', () => {
           expect(res).to.have.status(200);
           expect(cardHistories.every(ch => 
             res.body.find(r => 
-              r.cardNo === ch.cardNo &&
+              r.cardLink == ch.cardLink &&
               r.listId === ch.listId)));
           done();
         });
@@ -126,7 +133,7 @@ describe('[Web] Expect /api/cardHistory', () => {
   describe('/orphans GET', () => {
     it('to list the Orphans', done => {
       const cardHistories = tbd.from({})
-        .prop('cardNo').use(tbd.utils.range(1, 156123)).done()
+        .prop('cardLink').use(tbd.utils.range(1, 156123)).done()
         .make(4)
         .map(ch => new model.CardHistory(ch));
       this.listOrphansStub.resolves(cardHistories);
@@ -134,7 +141,7 @@ describe('[Web] Expect /api/cardHistory', () => {
         .then(res => {
           expect(res).to.have.status(200);
           expect(cardHistories.every(ch => 
-            res.body.find(r => r.cardNo === ch.cardNo)));
+            res.body.find(r => r.cardLink == ch.cardLink)));
           done();
         });
     });

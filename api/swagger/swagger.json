@@ -216,17 +216,16 @@
                 }
             }
         },
-        "/Cards/{cardNo}": {
+        "/Cards/{link}": {
             "x-swagger-router-controller": "cardController",
             "put": {
                 "description": "Create or replace the Card with the given Number\n",
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "cardNo",
+                        "name": "link",
                         "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string"
                     },
                     {
                         "in": "body",
@@ -287,9 +286,9 @@
         "WriteCardHistory": {
             "type": "object",
             "properties": {
-                "cardNo": {
-                    "type": "integer",
-                    "format": "int32"
+                "cardLink": {
+                    "type": "string",
+                    "maxLength": 8
                 },
                 "listId": {
                     "type": "integer",
@@ -311,11 +310,10 @@
         },
         "ReadCardHistoryOrphan": {
             "type": "object",
-            "description": "Only one of cardNo or listId will be set",
+            "description": "Only one of cardLink or listId will be set",
             "properties": {
-                "cardNo": {
-                    "type": "integer",
-                    "format": "int32"
+                "cardLink": {
+                    "type": "string"
                 },
                 "listId": {
                     "type": "string",
@@ -373,15 +371,15 @@
             "type": "object",
             "required": [
                 "name",
-		"link"
+		"no"
             ],
             "properties": {
                 "name": {
                     "type": "string"
                 },
-		"link": {
-		    "type": "string",
-		    "maxLength": 8
+		"no": {
+		    "type": "integer",
+		    "format": "int32"
 		}
             }
         }

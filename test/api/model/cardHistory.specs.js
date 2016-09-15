@@ -18,7 +18,7 @@ describe('[Web] Expect CardHistory', () => {
   describe('.bulkCreate()', () => {
     it('to insert the given CardHistories', done => {
       const cardHistories = tbd.from({})
-      .prop('cardNo').use(tbd.utils.range(1, 10000)).done()
+      .prop('cardLink').use(tbd.utils.range(1, 10000)).done()
       .prop('listId').use(tbd.utils.random(
         '4eea4ffc91e31d174600004a',
         '4eea4ffcafebcda74600004a',
@@ -35,14 +35,14 @@ describe('[Web] Expect CardHistory', () => {
             cardHistories.every(ch => 
               rows.find(r => 
                 !!r.created_at &&
-                r.card_no === ch.cardNo &&
+                r.card_link === ch.cardLink &&
                 r.list_id === ch.listId))))
       .to.eventually.be.true
       .notify(done); 
     });
     it('to not perform partial inserts', done => {
       const cardHistories = tbd.from({})
-      .prop('cardNo').use(tbd.utils.range(1, 10000)).done()
+      .prop('cardLink').use(tbd.utils.range(1, 10000)).done()
       .prop('listId').use(tbd.utils.random(
         '4eea4ffc91e31d174600004a',
         '4eea4ffcafebcda74600004a',
@@ -57,14 +57,14 @@ describe('[Web] Expect CardHistory', () => {
       expect(
         this.CardHistory
         .bulkCreate(cardHistories)
-        .catch(() => this.knex('card_histories').count('card_no as COUNT'))
+        .catch(() => this.knex('card_histories').count('card_link as COUNT'))
         .then(count => count[0].COUNT))
       .to.eventually.equal(0)
       .notify(done); 
     });
-    it('to not not allow duplicates', done => {
+    it('to not allow duplicates', done => {
       const cardHistories = tbd.from({
-        cardNo: 1,
+        cardNo: '156a42as',
         listId: '4eea4ffc91e31d174600004a'
       })
       .make(2)
@@ -79,7 +79,7 @@ describe('[Web] Expect CardHistory', () => {
   describe('.list()', () => {
     it('to return CardHistories that have statuses', done => {
       const cardHistories = tbd.from({
-        card_no: 1,
+        card_link: '45aneiso',
       })
       .prop('list_id').use(tbd.utils.sequential(1)).done()
       .make(7);
@@ -112,7 +112,7 @@ describe('[Web] Expect CardHistory', () => {
   describe('.listOrphans()', () => {
     it('to return ids of missing lists and cards', done => {
       const cardHistories = tbd.from({})
-      .prop('card_no').use(tbd.utils.sequential(3)).done()
+      .prop('card_link').use(tbd.utils.sequential(3)).done()
       .prop('list_id').use(tbd.utils.sequential(5)).done()
       .make(7);
       const lists = tbd.from({
@@ -123,9 +123,9 @@ describe('[Web] Expect CardHistory', () => {
       .make(7);
       const cards = tbd.from({
         name: 'banana pancakes',
-        link: 'tp9KEvpi'
+        no: 156
       })
-      .prop('no').use(tbd.utils.sequential(2)).done()
+      .prop('link').use(tbd.utils.sequential(2)).done()
       .make(7);
 
       this.knex.transaction(tx =>
@@ -138,7 +138,7 @@ describe('[Web] Expect CardHistory', () => {
         .to.eventually.have.length(2)
         .and.to.eventually.all.be.an.instanceOf(this.CardHistory)
         .and.to.eventually.include({listId: '11'})
-        .and.to.eventually.include({cardNo: 9})
+        .and.to.eventually.include({cardLink: 9})
         .notify(done))
       .catch(done);
     });

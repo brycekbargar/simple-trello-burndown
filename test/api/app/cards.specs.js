@@ -24,18 +24,18 @@ describe('[Web] Expect /api/cards', () => {
 
   before('setup server', () => start().then(s => this.app = s.app));
 
-  describe('/{cardNo} PUT', () => {
+  describe('/{link} PUT', () => {
     beforeEach('setup card', () => {
       this.card = {
         name: 'Blueberry Scone',
-        link: 'tz8kCvpi'
+        no: 1654
       };
-      this.cardNo = 456123;
+      this.cardLink = '1562anei';
     });
     it('to report creating a new card', done => {
       this.createOrReplaceStub.resolves(true);
       expect(chai.request(this.app)
-        .put(`/api/Cards/${this.cardNo}`)
+        .put(`/api/Cards/${this.cardLink}`)
         .send(this.card))
       .to.eventually.have.status(201)
       .notify(done);
@@ -43,14 +43,14 @@ describe('[Web] Expect /api/cards', () => {
     it('to report replacing an existing card', done => {
       this.createOrReplaceStub.resolves(false);
       expect(chai.request(this.app)
-        .put(`/api/Cards/${this.cardNo}`)
+        .put(`/api/Cards/${this.cardLink}`)
         .send(this.card))
       .to.eventually.have.status(204)
       .notify(done);
     });
     it('with invalid data to return validation errors', done => {
       expect(chai.request(this.app)
-        .put(`/api/Cards/${this.cardNo}`)
+        .put(`/api/Cards/${this.cardLink}`)
         .send({}).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(400)
@@ -62,22 +62,22 @@ describe('[Web] Expect /api/cards', () => {
     it('to attempt to save the card', () => {
       this.createOrReplaceStub.resolves(true);
       return chai.request(this.app)
-        .put(`/api/Cards/${this.cardNo}`)
+        .put(`/api/Cards/${this.cardLink}`)
         .send(this.card)
         .then(() => {
           expect(this.createOrReplaceStub).to.have.been.calledOnce;
           expect(this.createOrReplaceStub.args[0][0])
             .and.to.be.an.instanceOf(model.Card)
-            .and.to.have.property('no', this.cardNo)
+            .and.to.have.property('link', this.cardLink)
             .and.to.also.have.property('name', this.card.name)
-            .and.to.also.have.property('link', this.card.link);
+            .and.to.also.have.property('no', this.card.no);
         });
     });
     it('to forward exceptions', done => {
       const message = 'Nutella crepes';
       this.createOrReplaceStub.rejects(new Error(message));
       expect(chai.request(this.app)
-        .put(`/api/Cards/${this.cardNo}`)
+        .put(`/api/Cards/${this.cardLink}`)
         .send(this.card).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)

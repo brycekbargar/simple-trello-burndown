@@ -4,7 +4,7 @@ const Card = require('./../model/model.js').Card;
 
 const newCard = req => {
   let card = Object.assign({}, { 
-    no: req.swagger.params.cardNo.value
+    link: req.swagger.params.link.value
   }, req.swagger.params.card.value);
   return new Card(card);
 };

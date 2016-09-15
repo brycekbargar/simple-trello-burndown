@@ -2,8 +2,8 @@
 const knexFactory = require('./knexFactory.js');
 
 function CardHistory(data) {
-  if(data.cardNo) this.card_no = data.cardNo;
-  if(data.card_no) this.cardNo = data.card_no;
+  if(data.cardLink) this.card_link = data.cardLink;
+  if(data.card_link) this.cardLink = data.card_link;
 
   if(data.listId) this.list_id = data.listId;
   if(data.list_id) this.listId = data.list_id;
@@ -30,7 +30,7 @@ CardHistory.listOrphans = () =>
   knexFactory().then(knex => knex
     .select([
       'CH.list_id as list_id',
-      knex.raw('null as card_no')
+      knex.raw('null as card_link')
     ])
     .from('card_histories as CH')
     .leftJoin('lists as L', 'CH.list_id', 'L.id')
@@ -38,11 +38,11 @@ CardHistory.listOrphans = () =>
     .union(function() {
       this.select([
         knex.raw('null as list_id'),
-        'CH.card_no'
+        'CH.card_link'
       ])
       .from('card_histories as CH')
-      .leftJoin('cards as C', 'CH.card_no', 'C.no')
-      .whereNull('C.no');
+      .leftJoin('cards as C', 'CH.card_link', 'C.link')
+      .whereNull('C.link');
     }))
   .then(rows => rows.map(r => new CardHistory(r)));
 
