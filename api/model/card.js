@@ -4,6 +4,7 @@ const knexFactory = require('./knexFactory.js');
 function Card(data) {
   if(data.no) this.no = data.no;
   if(data.name) this.name = data.name;
+  if(data.link) this.link = data.link;
 }
 
 Card.createOrReplace = card => {

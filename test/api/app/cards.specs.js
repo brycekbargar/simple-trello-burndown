@@ -27,7 +27,8 @@ describe('[Web] Expect /api/cards', () => {
   describe('/{cardNo} PUT', () => {
     beforeEach('setup card', () => {
       this.card = {
-        name: 'Blueberry Scone'
+        name: 'Blueberry Scone',
+        link: 'tz8kCvpi'
       };
       this.cardNo = 456123;
     });
@@ -68,7 +69,8 @@ describe('[Web] Expect /api/cards', () => {
           expect(this.createOrReplaceStub.args[0][0])
             .and.to.be.an.instanceOf(model.Card)
             .and.to.have.property('no', this.cardNo)
-            .and.to.also.have.property('name', this.card.name);
+            .and.to.also.have.property('name', this.card.name)
+            .and.to.also.have.property('link', this.card.link);
         });
     });
     it('to forward exceptions', done => {

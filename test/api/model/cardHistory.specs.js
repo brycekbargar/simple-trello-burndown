@@ -122,7 +122,8 @@ describe('[Web] Expect CardHistory', () => {
       .prop('id').use(tbd.utils.sequential(4)).done()
       .make(7);
       const cards = tbd.from({
-        name: 'banana pancakes'
+        name: 'banana pancakes',
+        link: 'tp9KEvpi'
       })
       .prop('no').use(tbd.utils.sequential(2)).done()
       .make(7);

@@ -18,6 +18,7 @@ describe('[Web] Expect Card', () => {
     this.testCard = {
       no: 5,
       name: 'Test Card',
+      link: 'tp8KCEpi'
     };
     return this.knex.insert(this.testCard).into('cards');
   });
@@ -49,6 +50,7 @@ describe('[Web] Expect Card', () => {
       const updatedCard = {
         no: this.testCard.no,
         name: 'A new name',
+        link: 'tp98Cvpi'
       };
       expect(
         this.Card.createOrReplace(updatedCard)

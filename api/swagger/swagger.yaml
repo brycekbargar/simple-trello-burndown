@@ -262,6 +262,10 @@ definitions:
     type: object
     required: 
       - name
+      - link
     properties:
       name:
         type: string
+      link:
+        type: string
+        maxLength: 8
