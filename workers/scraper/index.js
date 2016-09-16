@@ -1,3 +1,5 @@
+'use strict';
+
 const CardHistory = require('./model/cardHistory.js');
 const List = require('./model/list.js');
 const Card = require('./model/card.js');
