@@ -12,12 +12,22 @@ consumes:
 produces:
   - application/json
 
+securityDefinitions:
+  ScraperSecurity:
+    type: apiKey
+    in: header
+    name: scraper-api-key
+
+security:
+  - ScraperSecurity: []
+
 paths:
 
   /hello:
     x-swagger-router-controller: helloController
     get:
       description: Returns 'Hello' to the caller
+      security: []
       parameters:
         - name: name
           in: query

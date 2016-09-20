@@ -18,13 +18,16 @@
   "homepage": "https://github.com/brycekbargar/simple-trello-burndown#readme",
   "dependencies": {
     "knex": "^0.12.1",
+    "passport": "^0.3.2",
+    "passport-localapikey-update": "^0.5.0",
+    "passport-restify": "^1.0.1",
     "restify": "^4.1.1",
     "superagent": "^2.2.0",
     "superagent-prefix": "0.0.2",
     "superagent-promise": "^1.1.0",
     "superagent-suffix": "^0.1.0",
     "swagger-client": "^2.1.20",
-    "swagger-restify-mw": "^0.7.0"
+    "swagger-node-runner": "^0.7.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

@@ -7,5 +7,6 @@ module.exports = {
     token: process.env.TRELLO_TOKEN,
     board: process.env.TRELLO_BOARD_ID,
     label: process.env.TRELLO_LABEL_ID
-  }
+  },
+  ScraperKey: process.env.SCRAPER_KEY
 };
