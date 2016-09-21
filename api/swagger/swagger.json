@@ -15,11 +15,24 @@
     "produces": [
         "application/json"
     ],
+    "securityDefinitions": {
+        "ScraperSecurity": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "apikey"
+        }
+    },
+    "security": [
+        {
+            "ScraperSecurity": []
+        }
+    ],
     "paths": {
         "/hello": {
             "x-swagger-router-controller": "helloController",
             "get": {
                 "description": "Returns 'Hello' to the caller",
+                "security": [],
                 "parameters": [
                     {
                         "name": "name",
@@ -129,7 +142,7 @@
                         "name": "listId",
                         "required": true,
                         "type": "string",
-			"maxLength": 36,
+                        "maxLength": 36,
                         "format": "uuid"
                     },
                     {
@@ -163,8 +176,8 @@
                         "in": "path",
                         "name": "listId",
                         "required": true,
+                        "maxLength": 36,
                         "type": "string",
-			"maxLength": 36,
                         "format": "uuid"
                     },
                     {
@@ -225,7 +238,8 @@
                         "in": "path",
                         "name": "link",
                         "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 8
                     },
                     {
                         "in": "body",
@@ -291,8 +305,9 @@
                     "maxLength": 8
                 },
                 "listId": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string",
+                    "maxLength": 36,
+                    "format": "uuid"
                 }
             }
         },
@@ -317,7 +332,7 @@
                 },
                 "listId": {
                     "type": "string",
-		    "maxLength": 36,
+                    "maxLength": 36,
                     "format": "uuid"
                 }
             }
@@ -360,7 +375,7 @@
                     "properties": {
                         "listId": {
                             "type": "string",
-			    "maxLength": 36,
+                            "maxLength": 36,
                             "format": "uuid"
                         }
                     }
@@ -371,16 +386,16 @@
             "type": "object",
             "required": [
                 "name",
-		"no"
+                "no"
             ],
             "properties": {
                 "name": {
                     "type": "string"
                 },
-		"no": {
-		    "type": "integer",
-		    "format": "int32"
-		}
+                "no": {
+                    "type": "integer",
+                    "format": "int32"
+                }
             }
         }
     }

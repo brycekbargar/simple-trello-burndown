@@ -64,7 +64,10 @@ const web = () => {
 const scraper = (spec) => {
   const SwaggerClient = require('swagger-client');
   const swaggerOpts = {
-    usePromise: true
+    usePromise: true,
+    authorizations: {
+      ScraperAuthorization: new SwaggerClient.ApiKeyAuthorization('apikey', config.ScraperKey, 'header')
+    }
   };
   if(spec){
     swaggerOpts.spec = spec;
