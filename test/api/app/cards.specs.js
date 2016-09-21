@@ -5,7 +5,6 @@ const sinon = require('sinon');
 require('sinon-as-promised');
 
 const model = require('./../../../api/model/model.js');
-const start = require('./../../../index.js').web;
 
 describe('[Web] Expect /api/cards', () => {
   before('setup spies', () => {
@@ -22,7 +21,11 @@ describe('[Web] Expect /api/cards', () => {
     this.CardSpy.reset();
   });
 
-  before('setup server', () => start().then(s => this.app = s.app));
+  before('setup server', () => {
+    this.key = 'A Key';
+    require('./../../../config/config.js').ScraperKey = this.key;
+    return require('./../../../index.js').web().then(s => this.app = s.app);
+  });
 
   describe('/{link} PUT', () => {
     beforeEach('setup card', () => {
@@ -36,6 +39,7 @@ describe('[Web] Expect /api/cards', () => {
       this.createOrReplaceStub.resolves(true);
       expect(chai.request(this.app)
         .put(`/api/Cards/${this.cardLink}`)
+        .set('apikey', this.key)
         .send(this.card))
       .to.eventually.have.status(201)
       .notify(done);
@@ -44,6 +48,7 @@ describe('[Web] Expect /api/cards', () => {
       this.createOrReplaceStub.resolves(false);
       expect(chai.request(this.app)
         .put(`/api/Cards/${this.cardLink}`)
+        .set('apikey', this.key)
         .send(this.card))
       .to.eventually.have.status(204)
       .notify(done);
@@ -51,6 +56,7 @@ describe('[Web] Expect /api/cards', () => {
     it('with invalid data to return validation errors', done => {
       expect(chai.request(this.app)
         .put(`/api/Cards/${this.cardLink}`)
+        .set('apikey', this.key)
         .send({}).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(400)
@@ -63,6 +69,7 @@ describe('[Web] Expect /api/cards', () => {
       this.createOrReplaceStub.resolves(true);
       return chai.request(this.app)
         .put(`/api/Cards/${this.cardLink}`)
+        .set('apikey', this.key)
         .send(this.card)
         .then(() => {
           expect(this.createOrReplaceStub).to.have.been.calledOnce;
@@ -78,10 +85,19 @@ describe('[Web] Expect /api/cards', () => {
       this.createOrReplaceStub.rejects(new Error(message));
       expect(chai.request(this.app)
         .put(`/api/Cards/${this.cardLink}`)
+        .set('apikey', this.key)
         .send(this.card).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)
       .to.eventually.have.deep.property('body.message', message)
+      .notify(done);
+    });
+    it('to require Scraper permissions', done => {
+      expect(chai.request(this.app)
+        .put(`/api/Cards/${this.cardLink}`)
+        .send({}).then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(401)
       .notify(done);
     });
   });

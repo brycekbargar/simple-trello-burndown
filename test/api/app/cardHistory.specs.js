@@ -6,7 +6,6 @@ require('sinon-as-promised');
 const tbd = require('tbd');
 
 const model = require('./../../../api/model/model.js');
-const start = require('./../../../index.js').web;
 
 describe('[Web] Expect /api/cardHistory', () => {
   before('setup spies', () => {
@@ -31,7 +30,11 @@ describe('[Web] Expect /api/cardHistory', () => {
     this.CardHistorySpy.reset();
   });
 
-  before('setup server', () => start().then(s => this.app = s.app));
+  before('setup server', () => {
+    this.key = 'A Key';
+    require('./../../../config/config.js').ScraperKey = this.key;
+    return require('./../../../index.js').web().then(s => this.app = s.app);
+  });
 
   describe('/ POST', () => {
     beforeEach('setup cardHistories', () => {
@@ -52,6 +55,7 @@ describe('[Web] Expect /api/cardHistory', () => {
       this.bulkCreateStub.resolves();
       expect(chai.request(this.app)
         .post('/api/CardHistory')
+        .set('apikey', this.key)
         .send(this.cardHistories))
       .to.eventually.have.status(204)
       .notify(done);
@@ -59,6 +63,7 @@ describe('[Web] Expect /api/cardHistory', () => {
     it('with invalid data to return validation errors', done => {
       expect(chai.request(this.app)
         .post('/api/CardHistory')
+        .set('apikey', this.key)
         .send({ banana: 'pancakes' }).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(400)
@@ -71,6 +76,7 @@ describe('[Web] Expect /api/cardHistory', () => {
       this.bulkCreateStub.resolves();
       return chai.request(this.app)
         .post('/api/CardHistory')
+        .set('apikey', this.key)
         .send(this.cardHistories)
         .then(() => {
           expect(this.bulkCreateStub).to.have.been.calledOnce;
@@ -90,10 +96,19 @@ describe('[Web] Expect /api/cardHistory', () => {
       this.bulkCreateStub.rejects(new Error(message));
       expect(chai.request(this.app)
         .post('/api/CardHistory')
+        .set('apikey', this.key)
         .send(this.cardHistories).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)
       .to.eventually.have.deep.property('body.message', message)
+      .notify(done);
+    });
+    it('to require Scraper permissions', done => {
+      expect(chai.request(this.app)
+        .post('/api/CardHistory')
+        .send({}).then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(401)
       .notify(done);
     });
   });
@@ -109,7 +124,9 @@ describe('[Web] Expect /api/cardHistory', () => {
         .make(4)
         .map(ch => new model.CardHistory(ch));
       this.listStub.resolves(cardHistories);
-      chai.request(this.app).get('/api/CardHistory')
+      chai.request(this.app)
+        .get('/api/CardHistory')
+        .set('apikey', this.key)
         .then(res => {
           expect(res).to.have.status(200);
           expect(cardHistories.every(ch => 
@@ -123,10 +140,18 @@ describe('[Web] Expect /api/cardHistory', () => {
       const message = 'Pecan Waffles';
       this.listStub.rejects(new Error(message));
       expect(chai.request(this.app)
-        .get('/api/CardHistory').then(() => {})
+        .get('/api/CardHistory')
+        .set('apikey', this.key).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)
       .to.eventually.have.deep.property('body.message', message)
+      .notify(done);
+    });
+    it('to require Scraper permissions', done => {
+      expect(chai.request(this.app)
+        .get('/api/CardHistory').then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(401)
       .notify(done);
     });
   });
@@ -137,7 +162,9 @@ describe('[Web] Expect /api/cardHistory', () => {
         .make(4)
         .map(ch => new model.CardHistory(ch));
       this.listOrphansStub.resolves(cardHistories);
-      chai.request(this.app).get('/api/CardHistory/orphans')
+      chai.request(this.app)
+        .get('/api/CardHistory/orphans')
+        .set('apikey', this.key)
         .then(res => {
           expect(res).to.have.status(200);
           expect(cardHistories.every(ch => 
@@ -149,10 +176,18 @@ describe('[Web] Expect /api/cardHistory', () => {
       const message = 'Banana Pancakes';
       this.listOrphansStub.rejects(new Error(message));
       expect(chai.request(this.app)
-        .get('/api/CardHistory/orphans').then(() => {})
+        .get('/api/CardHistory/orphans')
+        .set('apikey', this.key).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)
       .to.eventually.have.deep.property('body.message', message)
+      .notify(done);
+    });
+    it('to require Scraper permissions', done => {
+      expect(chai.request(this.app)
+        .get('/api/CardHistory/orphans').then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(401)
       .notify(done);
     });
   });

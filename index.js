@@ -10,8 +10,9 @@ const web = () => {
 
   const passport = require('passport-restify');
   const LocalAPIKeyStrategy = require('passport-localapikey-update').Strategy;
-  passport.use(new LocalAPIKeyStrategy((key, done) => 
-      done(null, key === config.ScraperKey)));
+  passport.use(new LocalAPIKeyStrategy((key, done) => {
+    done(null, key === config.ScraperKey);
+  }));
   app.use(passport.initialize());
 
   const Swagger = require('swagger-node-runner');

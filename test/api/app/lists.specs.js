@@ -6,7 +6,6 @@ require('sinon-as-promised');
 const tbd = require('tbd');
 
 const model = require('./../../../api/model/model.js');
-const start = require('./../../../index.js').web;
 
 describe('[Web] Expect /api/lists', () => {
   before('setup spies', () => {
@@ -31,7 +30,11 @@ describe('[Web] Expect /api/lists', () => {
     this.ListSpy.reset();
   });
 
-  before('setup server', () => start().then(s => this.app = s.app));
+  before('setup server', () => {
+    this.key = 'A Key';
+    require('./../../../config/config.js').ScraperKey = this.key;
+    return require('./../../../index.js').web().then(s => this.app = s.app);
+  });
 
   describe('/{listId} PUT', () => {
     beforeEach('setup list', () => {
@@ -45,6 +48,7 @@ describe('[Web] Expect /api/lists', () => {
       this.createOrReplaceStub.resolves(true);
       expect(chai.request(this.app)
         .put(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list))
       .to.eventually.have.status(201)
       .notify(done);
@@ -53,6 +57,7 @@ describe('[Web] Expect /api/lists', () => {
       this.createOrReplaceStub.resolves(false);
       expect(chai.request(this.app)
         .put(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list))
       .to.eventually.have.status(204)
       .notify(done);
@@ -60,6 +65,7 @@ describe('[Web] Expect /api/lists', () => {
     it('with invalid data to return validation errors', done => {
       expect(chai.request(this.app)
         .put(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send({}).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(400)
@@ -72,6 +78,7 @@ describe('[Web] Expect /api/lists', () => {
       this.createOrReplaceStub.resolves(true);
       return chai.request(this.app)
         .put(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list)
         .then(() => {
           expect(this.createOrReplaceStub).to.have.been.calledOnce;
@@ -88,10 +95,19 @@ describe('[Web] Expect /api/lists', () => {
       this.createOrReplaceStub.rejects(new Error(message));
       expect(chai.request(this.app)
         .put(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)
       .to.eventually.have.deep.property('body.message', message)
+      .notify(done);
+    });
+    it('to require Scraper permissions', done => {
+      expect(chai.request(this.app)
+        .put(`/api/Lists/${this.listId}`)
+        .send({}).then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(401)
       .notify(done);
     });
   });
@@ -107,6 +123,7 @@ describe('[Web] Expect /api/lists', () => {
       this.updateStub.resolves(true);
       expect(chai.request(this.app)
         .patch(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list))
       .to.eventually.have.status(204)
       .notify(done);
@@ -115,6 +132,7 @@ describe('[Web] Expect /api/lists', () => {
       this.updateStub.resolves(true);
       return chai.request(this.app)
         .patch(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list)
         .then(() => {
           expect(this.updateStub).to.have.been.calledOnce;
@@ -131,6 +149,7 @@ describe('[Web] Expect /api/lists', () => {
       this.updateStub.rejects(new Error(message));
       expect(chai.request(this.app)
         .patch(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)
@@ -141,9 +160,18 @@ describe('[Web] Expect /api/lists', () => {
       this.updateStub.resolves(false);
       expect(chai.request(this.app)
         .patch(`/api/Lists/${this.listId}`)
+        .set('apikey', this.key)
         .send(this.list).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(404)
+      .notify(done);
+    });
+    it('to require Scraper permissions', done => {
+      expect(chai.request(this.app)
+        .patch(`/api/Lists/${this.listId}`)
+        .send({}).then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(401)
       .notify(done);
     });
   });
@@ -155,7 +183,9 @@ describe('[Web] Expect /api/lists', () => {
         .make(4)
         .map(ch => new model.List(ch));
       this.listStub.resolves(lists);
-      return chai.request(this.app).get('/api/Lists')
+      return chai.request(this.app)
+        .get('/api/Lists')
+        .set('apikey', this.key)
         .then(res => {
           expect(res).to.have.status(200);
           expect(lists.every(l => res.body.find(r => r.id === l.id)));
@@ -165,10 +195,18 @@ describe('[Web] Expect /api/lists', () => {
       const message = 'Pecan Waffles';
       this.listStub.rejects(new Error(message));
       expect(chai.request(this.app)
-        .get('/api/Lists').then(() => {})
+        .get('/api/Lists')
+        .set('apikey', this.key).then(() => {})
         .catch(err => err.response))
       .to.eventually.have.status(500)
       .to.eventually.have.deep.property('body.message', message)
+      .notify(done);
+    });
+    it('to require Scraper permissions', done => {
+      expect(chai.request(this.app)
+        .get('/api/Lists').then(() => {})
+        .catch(err => err.response))
+      .to.eventually.have.status(401)
       .notify(done);
     });
   });
