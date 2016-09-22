@@ -66,6 +66,8 @@
     "watch-test": "npm test --simple-trello-burndown:reporter=min || true",
     "watch": "npm-watch",
     "create-migration": "knex migrate:make --knexfile ./config/knexfile.js",
-    "init-dev": "./config/resetDevDatabase.js"
+    "init-dev": "./config/resetDevDatabase.js",
+    "heroku-prebuild": "npm ls --depth=0 | grep mysql || npm install mysql",
+    "heroku-postbuild": "node ./node_modules/.bin/knex migrate:latest --knexfile ./config/knexfile.js --env production"
   }
 }
