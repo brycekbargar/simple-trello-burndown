@@ -3,13 +3,13 @@
 const stub = require('sinon').stub;
 require('sinon-as-promised');
 const tbd = require('tbd');
-const expect = require('./../chai.js').expect;
-const g = require('./../generate.js');
+const expect = require('./../../chai.js').expect;
+const g = require('./../../generate.js');
 
-const scraper = require('./../../workers/scraper/index.js');
-const CardHistory = require('./../../workers/scraper/model/cardHistory.js');
-const List = require('./../../workers/scraper/model/list.js');
-const Card = require('./../../workers/scraper/model/card.js');
+const scraper = require('./../../../workers/scraper/index.js');
+const CardHistory = require('./../../../workers/model/cardHistory.js');
+const List = require('./../../../workers/model/list.js');
+const Card = require('./../../../workers/model/card.js');
 
 describe('[Scraper] Expect scraper', () => {
   beforeEach('setup spies', () => {

@@ -6,11 +6,11 @@ const mock = require('superagent-mocker')(superagent);
 const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
 
-describe('[Scraper] Expect CardHistory', () => {
+describe('[Workers] Expect CardHistory', () => {
   beforeEach('setup spies', () => {
     this.proxyquireStubs = {
       'superagent': superagent,
-      './../../../config/config.js': this.config = {
+      './../../config/config.js': this.config = {
         trello: {
           key: 'Pecan',
           token: 'Waffles',
@@ -21,7 +21,7 @@ describe('[Scraper] Expect CardHistory', () => {
     };
   });
   beforeEach('setup model', () => {
-    this.CardHistory = proxyquire('./../../../workers/scraper/model/cardHistory.js', this.proxyquireStubs);
+    this.CardHistory = proxyquire('./../../../workers/model/cardHistory.js', this.proxyquireStubs);
   });
   beforeEach('setup client', done => {
     require('./../../../index.js').scraper(require('./../../../api/swagger/swagger.json'))
