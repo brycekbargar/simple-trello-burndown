@@ -134,7 +134,28 @@ describe('[Web] Expect /api/cardHistory', () => {
               r.cardLink == ch.cardLink &&
               r.listId === ch.listId)));
           done();
-        });
+        })
+        .catch(done);
+    });
+    it('to pass the filter', done => {
+      const start = new Date('12/24/1995');
+      const end = new Date('12/24/2012');
+      this.listStub.resolves([]);
+      chai.request(this.app)
+        .get('/api/CardHistory')
+        .set('apikey', this.key)
+        .query({
+          start: start,
+          end: end
+        })
+        .then(() => {
+          expect(this.listStub).to.have.been.calledWith({
+            start: start,
+            end: end
+          });
+          done();
+        })
+        .catch(done);
     });
     it('to forward exceptions', done => {
       const message = 'Pecan Waffles';

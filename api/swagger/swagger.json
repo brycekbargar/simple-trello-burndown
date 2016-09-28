@@ -89,6 +89,22 @@
             },
             "get": {
                 "description": "Gets a list of history of the cards\n",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "start",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "end",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",

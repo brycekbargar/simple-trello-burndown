@@ -107,6 +107,52 @@ describe('[Web] Expect CardHistory', () => {
           .notify(done))
         .catch(done);
     });
+
+    describe('to filter by', () => {
+      beforeEach('setup cardHistory date range', () => {
+        const cardHistories = tbd.from({
+          list_id: 1,
+          card_link: '45aneiso',
+        })
+        .prop('created_at').use(tbd.utils.sequential(new Date('11/1/1989'))).done()
+        .make(8);
+        const lists = tbd.from({
+          id: 1,
+          name: 'nutella crepes',
+          status: 'dev',
+          order: 1
+        })
+        .make(1);
+  
+        return this.knex.transaction(tx => 
+          Promise.all([
+            tx.insert(cardHistories).into('card_histories'),
+            tx.insert(lists).into('lists')
+          ]));
+      });
+      it('bounded dates', done => {
+        expect(this.CardHistory.list({
+          start: new Date('11/3/1989'),
+          end: new Date('11/7/1989')
+        }))
+        .to.eventually.have.length(5)
+        .notify(done);
+      });
+      it('open end date', done => {
+        expect(this.CardHistory.list({
+          start: new Date('11/3/1989')
+        }))
+        .to.eventually.have.length(5)
+        .notify(done);
+      });
+      it('open start date', done => {
+        expect(this.CardHistory.list({
+          end: new Date('11/3/1989')
+        }))
+        .to.eventually.have.length(2)
+        .notify(done);
+      });
+    });
   });
 
   describe('.listOrphans()', () => {
