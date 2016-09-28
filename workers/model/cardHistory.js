@@ -15,6 +15,9 @@ function CardHistory (data) {
 
   if(data.idList) { this.listId = data.idList; }
   if(data.listId) { this.listId = data.listId; }
+
+  if(data.createdAt) { this.createdAt = data.createdAt; }
+  if(data.status) { this.status = data.status; }
 }
 
 CardHistory.scrapeTrello = () =>
@@ -50,6 +53,27 @@ CardHistory.listOrphans = client =>
 CardHistory.getRecentHistory = client => 
   client.apis.default.get_CardHistory({
     start: moment().add(-2, 'days').startOf('day').format()
+  })
+  .then(cardHistories => {
+    const groupedByDate = cardHistories.reduce((prev, curr) => {
+      const prevKeys = Object.keys(prev);
+      const sameDay = prevKeys.findIndex(d => moment(d).isSame(curr.createdAt, 'day'));
+      if(sameDay === -1) {
+        prev[curr.createdAt] = [ curr ];
+      }
+      else if(moment(prevKeys[sameDay]).isBefore(curr.createdAt)) {
+        delete prev[prevKeys[sameDay]];
+        prev[curr.createdAt] = [ curr ];
+      }
+      else if(moment(prevKeys[sameDay]).isSame(curr.createdAt)) {
+        prev[curr.createdAt].push(curr);
+      }
+      return prev;
+    }, {});
+
+    return Object.keys(groupedByDate)
+      .sort().slice(-2)
+      .reduce((prev, curr) => prev.concat(groupedByDate[curr]), []);
   });
 
 module.exports = CardHistory;
