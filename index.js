@@ -61,12 +61,12 @@ const web = () => {
     }));
 };
 
-const scraper = (spec) => {
+const makeClient = (spec, keyname, key) => {
   const SwaggerClient = require('swagger-client');
   const swaggerOpts = {
     usePromise: true,
     authorizations: {
-      ScraperAuthorization: new SwaggerClient.ApiKeyAuthorization('apikey', config.ScraperKey, 'header')
+      ScraperAuthorization: new SwaggerClient.ApiKeyAuthorization(keyname, key, 'header')
     }
   };
   if(spec){
@@ -76,14 +76,25 @@ const scraper = (spec) => {
     swaggerOpts.url = config.swaggerClientUrl;
   }
 
-  return new SwaggerClient(swaggerOpts)
+  return new SwaggerClient(swaggerOpts);
+};
+
+const scraper = (spec) => 
+  makeClient(spec, 'apikey', config.ScraperKey)
     .then(client => ({
       client: client,
       start: () => require('./workers/scraper/index.js')(client)
     }));
-};
+
+const discord = (spec) => 
+  makeClient(spec, 'apikey', config.ScraperKey)
+    .then(client => ({
+      client: client,
+      start: () => require('./workers/discord/index.js')(client)
+    }));
 
 module.exports = {
   web:  web,
-  scraper: scraper
+  scraper: scraper,
+  discord: discord
 };

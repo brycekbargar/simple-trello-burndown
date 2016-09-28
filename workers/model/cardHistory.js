@@ -1,3 +1,5 @@
+'use strict';
+
 const trello = require('superagent');
 const trelloApi = require('superagent-prefix')('https://api.trello.com/1');
 const config = require('./../../config/config.js');
@@ -5,6 +7,7 @@ const auth = {
   key: config.trello.key,
   token: config.trello.token
 };
+const moment = require('moment');
 
 function CardHistory (data) {
   if(data.shortLink) { this.cardLink = data.shortLink; }
@@ -43,5 +46,10 @@ CardHistory.listOrphans = client =>
   client.apis.default.orphans({})
   .then(res => res.obj)
   .then(orphans => orphans.map(o => new CardHistory(o)));
+
+CardHistory.getRecentHistory = client => 
+  client.apis.default.get_CardHistory({
+    start: moment().add(-2, 'days').startOf('day').format()
+  });
 
 module.exports = CardHistory;

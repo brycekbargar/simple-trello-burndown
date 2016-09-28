@@ -1,10 +1,14 @@
-const stub = require('sinon').stub;
+'use strict';
+
+const sinon = require('sinon');
+const stub = sinon.stub;
 require('sinon-as-promised');
 const expect = require('./../../chai.js').expect;
 const superagent = require('superagent');
 const mock = require('superagent-mocker')(superagent);
 const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
+const moment = require('moment');
 
 describe('[Workers] Expect CardHistory', () => {
   beforeEach('setup spies', () => {
@@ -32,10 +36,12 @@ describe('[Workers] Expect CardHistory', () => {
   });
   beforeEach('setup spies', () => {
     this.postStub = stub(this.client.apis.default, 'post_CardHistory');
+    this.getStub = stub(this.client.apis.default, 'get_CardHistory');
     this.orphansStub = stub(this.client.apis.default, 'orphans');
   });
   afterEach('teardown spies', () => {
     this.postStub.restore();
+    this.getStub.restore();
     this.orphansStub.restore();
   });
   describe('.scrapeTrello()', () => {
@@ -125,6 +131,30 @@ describe('[Workers] Expect CardHistory', () => {
       const error = new Error('BLAAAARGH');
       this.orphansStub.rejects(error);
       expect(this.CardHistory.listOrphans(this.client))
+      .to.eventually.be.rejectedWith(error)
+      .notify(done);
+    });
+  });
+
+  describe('.getRecentHistory()', () => {
+    it('to request two days of CardHistory', done => {
+      this.getStub.resolves([]);
+      this.CardHistory.getRecentHistory(this.client)
+        .then(() => {
+          expect(this.getStub)
+          .to.have.been.calledOnce
+          .and.to.have.been.calledWithMatch(query => 
+            !!query.start && 
+            moment(query.start).isValid() &&
+            moment().add(-3, 'days') < moment(query.start));
+          done();
+        })
+        .catch(done);
+    });
+    it('to pass-through errors', done => {
+      const error = new Error('BLAAAARGH');
+      this.getStub.rejects(error);
+      expect(this.CardHistory.getRecentHistory(this.client))
       .to.eventually.be.rejectedWith(error)
       .notify(done);
     });
