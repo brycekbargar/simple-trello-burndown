@@ -21,7 +21,7 @@ describe('[Scraper] Expect scraper', () => {
     this.card_getFromTrelloStub = stub(Card, 'getFromTrello');
     this.card_uploadStub = stub(Card, 'upload');
   });
-  afterEach('teardown spise', () => {
+  afterEach('teardown spies', () => {
     this.scrapeTrelloStub.restore();
     this.uploadStub.restore();
     this.orphansStub.restore();

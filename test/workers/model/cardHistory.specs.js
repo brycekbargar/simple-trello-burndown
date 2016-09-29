@@ -143,6 +143,7 @@ describe('[Workers] Expect CardHistory', () => {
         .then(() => {
           expect(this.getStub)
           .to.have.been.calledOnce
+          .and.to.all.satisfy(ch => ch instanceof this.CardHistory)
           .and.to.have.been.calledWithMatch(query => 
             !!query.start && 
             moment(query.start).isValid() &&
@@ -150,80 +151,6 @@ describe('[Workers] Expect CardHistory', () => {
           done();
         })
         .catch(done);
-    });
-    describe('when', () => {
-      it('there is only one day return it', done => {
-        const cardHistories = tbd.from({
-          createdAt: moment().format(),
-          status: 'qa'
-        })
-        .make(4)
-        .map(ch => new this.CardHistory(ch));
-        this.getStub.resolves(cardHistories);
-        expect(this.CardHistory.getRecentHistory(this.client))
-        .to.eventually.have.length(cardHistories.length)
-        .and.to.eventually.all.satisfy(ch => cardHistories.includes(ch))
-        .notify(done);
-      });
-      it('there are two days to return both', done => {
-        const cardHistories = tbd.from({
-          status: 'qa'
-        })
-        .prop('createdAt').use(tbd.utils.random(
-          moment().format(),
-          moment().add(-1, 'days').format()
-        )).done()
-        .make(7)
-        .map(ch => new this.CardHistory(ch));
-        this.getStub.resolves(cardHistories);
-        expect(this.CardHistory.getRecentHistory(this.client))
-        .to.eventually.have.length(cardHistories.length)
-        .and.to.eventually.all.satisfy(ch => cardHistories.includes(ch))
-        .notify(done);
-      });
-      it('there are more than two days to return the latest two', done => {
-        const cardHistories = tbd.from({
-          status: 'qa'
-        })
-        .prop('createdAt').use(tbd.utils.random(
-          moment().add(-6, 'days').format(),
-          moment().add(-1, 'days').format(),
-          moment().add(-7, 'days').format(),
-          moment().add(-5, 'days').format(),
-          moment().add(-4, 'days').format(),
-          moment().add(-2, 'days').format(),
-          moment().add(-3, 'days').format()
-        )).done()
-        .make(56)
-        .map(ch => new this.CardHistory(ch));
-        this.getStub.resolves(cardHistories);
-        expect(this.CardHistory.getRecentHistory(this.client))
-        .to.eventually.all.satisfy(ch => moment(ch.createdAt) > moment().add(-3, 'days'))
-        .notify(done);
-      });
-      it('there are more than two records for the same day to return the latest', done => {
-        const latestToday = moment().add(0, 'days').startOf('day').add(6, 'hours');
-        const latestYesterday = moment().add(-1, 'days').startOf('day').add(16, 'hours');
-        const cardHistories = tbd.from({
-          status: 'qa'
-        })
-        .prop('createdAt').use(tbd.utils.random(
-          moment(latestToday).format(),
-          moment(latestToday).add(-3, 'hours').format(),
-          moment(latestYesterday).add(-3, 'hours').format(),
-          moment(latestYesterday).add(-8, 'hours').format(),
-          moment(latestYesterday).format()
-        )).done()
-        .make(56)
-        .map(ch => new this.CardHistory(ch));
-        this.getStub.resolves(cardHistories);
-        expect(this.CardHistory.getRecentHistory(this.client))
-        .to.eventually.all.satisfy(ch => 
-          latestToday.isSame(ch.createdAt) || 
-          latestYesterday.isSame(ch.createdAt))
-        .notify(done);
-      });
-
     });
     it('to pass-through errors', done => {
       const error = new Error('BLAAAARGH');
