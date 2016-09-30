@@ -8,11 +8,10 @@ const superagent = require('superagent');
 const mock = require('superagent-mocker')(superagent);
 const tbd = require('tbd');
 const proxyquire = require('proxyquire').noCallThru();
-const moment = require('moment');
 
-describe('[Workers] Expect CardHistory', () => {
-  beforeEach('setup spies', () => {
-    this.proxyquireStubs = {
+describe('[Scraper] Expect CardHistory', () => {
+  beforeEach('setup model', () => {
+    const proxyquireStubs = {
       'superagent': superagent,
       './../../config/config.js': this.config = {
         trello: {
@@ -23,9 +22,7 @@ describe('[Workers] Expect CardHistory', () => {
         }
       }
     };
-  });
-  beforeEach('setup model', () => {
-    this.CardHistory = proxyquire('./../../../workers/model/cardHistory.js', this.proxyquireStubs);
+    this.CardHistory = proxyquire('./../../../workers/scraper/cardHistory.js', proxyquireStubs);
   });
   beforeEach('setup client', done => {
     require('./../../../index.js').scraper(require('./../../../api/swagger/swagger.json'))
@@ -136,28 +133,4 @@ describe('[Workers] Expect CardHistory', () => {
     });
   });
 
-  describe('.getRecentHistory()', () => {
-    it('to request two days of CardHistory', done => {
-      this.getStub.resolves([]);
-      this.CardHistory.getRecentHistory(this.client)
-        .then(() => {
-          expect(this.getStub)
-          .to.have.been.calledOnce
-          .and.to.all.satisfy(ch => ch instanceof this.CardHistory)
-          .and.to.have.been.calledWithMatch(query => 
-            !!query.start && 
-            moment(query.start).isValid() &&
-            moment().add(-3, 'days') < moment(query.start));
-          done();
-        })
-        .catch(done);
-    });
-    it('to pass-through errors', done => {
-      const error = new Error('BLAAAARGH');
-      this.getStub.rejects(error);
-      expect(this.CardHistory.getRecentHistory(this.client))
-      .to.eventually.be.rejectedWith(error)
-      .notify(done);
-    });
-  });
 });

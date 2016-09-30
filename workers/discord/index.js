@@ -2,8 +2,8 @@
 
 const moment = require('moment');
 
-const CardHistory = require('./../model/cardHistory.js');
-const Message = require('./../model/message.js');
+const CardHistory = require('./cardHistory.js');
+const Message = require('./message.js');
 
 module.exports = client =>
   CardHistory.getRecentHistory(client)

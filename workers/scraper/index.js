@@ -1,8 +1,8 @@
 'use strict';
 
-const CardHistory = require('./../model/cardHistory.js');
-const List = require('./../model/list.js');
-const Card = require('./../model/card.js');
+const CardHistory = require('./cardHistory.js');
+const List = require('./list.js');
+const Card = require('./card.js');
 
 module.exports = client => 
   CardHistory.scrapeTrello()

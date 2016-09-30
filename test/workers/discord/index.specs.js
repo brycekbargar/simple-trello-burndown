@@ -8,8 +8,8 @@ const expect = require('./../../chai.js').expect;
 const moment = require('moment');
 
 const discord = require('./../../../workers/discord/index.js');
-const CardHistory = require('./../../../workers/model/cardHistory.js');
-const Message = require('./../../../workers/model/message.js');
+const CardHistory = require('./../../../workers/discord/cardHistory.js');
+const Message = require('./../../../workers/discord/message.js');
 
 describe('[Discord] Expect discord bot', () => {
   beforeEach('setup spies', () => {

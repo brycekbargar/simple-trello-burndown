@@ -7,7 +7,6 @@ const auth = {
   key: config.trello.key,
   token: config.trello.token
 };
-const moment = require('moment');
 
 function CardHistory (data) {
   if(data.shortLink) { this.cardLink = data.shortLink; }
@@ -15,9 +14,6 @@ function CardHistory (data) {
 
   if(data.idList) { this.listId = data.idList; }
   if(data.listId) { this.listId = data.listId; }
-
-  if(data.createdAt) { this.createdAt = data.createdAt; }
-  if(data.status) { this.status = data.status; }
 }
 
 CardHistory.scrapeTrello = () =>
@@ -49,11 +45,5 @@ CardHistory.listOrphans = client =>
   client.apis.default.orphans({})
   .then(res => res.obj)
   .then(orphans => orphans.map(o => new CardHistory(o)));
-
-CardHistory.getRecentHistory = client => 
-  client.apis.default.get_CardHistory({
-    start: moment().add(-2, 'days').startOf('day').format()
-  })
-  .then(cardHistories => cardHistories.map(ch => new CardHistory(ch)));
 
 module.exports = CardHistory;

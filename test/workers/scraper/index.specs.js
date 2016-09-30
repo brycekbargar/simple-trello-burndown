@@ -7,9 +7,9 @@ const expect = require('./../../chai.js').expect;
 const g = require('./../../generate.js');
 
 const scraper = require('./../../../workers/scraper/index.js');
-const CardHistory = require('./../../../workers/model/cardHistory.js');
-const List = require('./../../../workers/model/list.js');
-const Card = require('./../../../workers/model/card.js');
+const CardHistory = require('./../../../workers/scraper/cardHistory.js');
+const List = require('./../../../workers/scraper/list.js');
+const Card = require('./../../../workers/scraper/card.js');
 
 describe('[Scraper] Expect scraper', () => {
   beforeEach('setup spies', () => {
