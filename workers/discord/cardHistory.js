@@ -11,6 +11,7 @@ CardHistory.getRecentHistory = client =>
   client.apis.default.get_CardHistory({
     start: moment().add(-2, 'days').startOf('day').format()
   })
+  .then(res => res.obj)
   .then(cardHistories => cardHistories.map(ch => new CardHistory(ch)));
 
 module.exports = CardHistory;

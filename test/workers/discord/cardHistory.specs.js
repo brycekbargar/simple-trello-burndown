@@ -26,7 +26,7 @@ describe('[Discord] Expect CardHistory', () => {
 
   describe('.getRecentHistory()', () => {
     it('to request two days of CardHistory', done => {
-      this.getStub.resolves([]);
+      this.getStub.resolves({ obj: [] });
       CardHistory.getRecentHistory(this.client)
         .then(() => {
           expect(this.getStub)

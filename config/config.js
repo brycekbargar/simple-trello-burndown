@@ -10,5 +10,8 @@ module.exports = {
     board: process.env.TRELLO_BOARD_ID,
     label: process.env.TRELLO_LABEL_ID
   },
+  discord: {
+    token: process.env.DISCORD_TOKEN
+  },
   ScraperKey: process.env.SCRAPER_KEY
 };
